@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95e66c6366d904e98bc83428217d4fd7, type: 3}
+  m_Name: MegaAnimator
+  m_EditorClassIdentifier: 
+  _data:
+    _json: '{"graph":{"variables":{"Kind":"Flow","collection":{"$content":[],"$version":"A"},"$version":"A"},"controlInputDefinitions":[{"key":"Idle","label":null,"summary":"Play
+      Idle Animation","hideLabel":false},{"key":"CrouchIdle","label":null,"summary":"Play
+      CrouchIdle Animation","hideLabel":false},{"key":"Walk","label":null,"summary":"Play
+      Walk Animation","hideLabel":false},{"key":"Run","label":null,"summary":"Play
+      Run Animation","hideLabel":false},{"key":"CrouchWalk","label":null,"summary":"Play
+      CrouchWalk Animation","hideLabel":false},{"key":"Jump","label":null,"summary":"Play
+      CrouchIdle Animation","hideLabel":false},{"key":"Fall","label":null,"summary":"Play
+      Fall Animation","hideLabel":false},{"key":"Dash","label":null,"summary":"Play
+      Dash Animation","hideLabel":false},{"key":"WallSlide","label":null,"summary":"Play
+      WallSlide Animation","hideLabel":false},{"key":"Slide Start","label":null,"summary":"Play
+      Slide Start Animation","hideLabel":false},{"key":"Slide End","label":null,"summary":"Play
+      Slide End Animation","hideLabel":false}],"controlOutputDefinitions":[{"key":"Idle
+      Out","label":null,"summary":null,"hideLabel":true},{"key":"Crouch Idle Out","label":null,"summary":null,"hideLabel":true},{"key":"Walk
+      Out","label":null,"summary":null,"hideLabel":true},{"key":"Run Out","label":null,"summary":null,"hideLabel":true},{"key":"Crouch
+      Walk Out","label":null,"summary":null,"hideLabel":true},{"key":"Jump Out","label":null,"summary":null,"hideLabel":true},{"key":"Fall
+      Out","label":null,"summary":null,"hideLabel":true},{"key":"Dash Out","label":null,"summary":null,"hideLabel":true},{"key":"Wall
+      Slide Out","label":null,"summary":null,"hideLabel":true},{"key":"Slide Start
+      Out","label":null,"summary":null,"hideLabel":true},{"key":"Slide End Out","label":null,"summary":null,"hideLabel":true}],"valueInputDefinitions":[],"valueOutputDefinitions":[],"title":null,"summary":null,"pan":{"x":-78.7864,"y":357.4271},"zoom":0.8,"elements":[{"nest":{"source":"Macro","macro":0,"embed":null},"defaultValues":{"Var
+      Name":{"$content":"Sliding","$type":"System.String"},"Anim Name":{"$content":"SlideStart","$type":"System.String"}},"position":{"x":-168.0,"y":153.0},"guid":"4f3a24e7-3d14-45ae-878a-e7af544b889e","$version":"A","$type":"Unity.VisualScripting.SubgraphUnit","$id":"31"},{"nest":{"source":"Macro","macro":1,"embed":null},"defaultValues":{"Var
+      Name":{"$content":"isFallingFromWall","$type":"System.String"},"Anim Name":{"$content":"Fall","$type":"System.String"}},"position":{"x":-838.0,"y":511.0},"guid":"40c3f2c1-efd7-4961-a4a7-352865ed4819","$version":"A","$type":"Unity.VisualScripting.SubgraphUnit","$id":"34"},{"outputCount":2,"defaultValues":{},"position":{"x":-1315.0,"y":264.0},"guid":"7cae81d4-e513-4956-89bb-9608aa3d325a","$version":"A","$type":"Unity.VisualScripting.Sequence","$id":"37"},{"nest":{"source":"Macro","macro":2,"embed":null},"defaultValues":{"Var
+      Name":{"$content":"isCrouchWalking","$type":"System.String"},"Anim Name":{"$content":"CrouchWalk","$type":"System.String"}},"position":{"x":53.0,"y":-649.0},"guid":"2f06ae39-3e17-42da-8595-eb6eac0e9f97","$version":"A","$type":"Unity.VisualScripting.SubgraphUnit","$id":"39"},{"nest":{"source":"Macro","macro":3,"embed":null},"defaultValues":{"Var
+      Name":{"$content":"SlidingEnd","$type":"System.String"},"Anim Name":{"$content":"SlideEnd","$type":"System.String"}},"position":{"x":144.0,"y":153.0},"guid":"ba2c231b-8b55-43f6-9852-c65ad1cfd2b4","$version":"A","$type":"Unity.VisualScripting.SubgraphUnit","$id":"42"},{"nest":{"source":"Macro","macro":4,"embed":null},"defaultValues":{"Var
+      Name":{"$content":"isWalking","$type":"System.String"},"Anim Name":{"$content":"Walk","$type":"System.String"}},"position":{"x":-650.0,"y":-657.0},"guid":"a4106a23-48ce-4781-bba7-1221289fcf61","$version":"A","$type":"Unity.VisualScripting.SubgraphUnit","$id":"45"},{"nest":{"source":"Macro","macro":5,"embed":null},"defaultValues":{"Var
+      Name":{"$content":"isIdle","$type":"System.String"},"Anim Name":{"$content":"Idle","$type":"System.String"}},"position":{"x":-1359.0,"y":-660.0},"guid":"9979e0c4-f937-4ec5-9bf3-c174df814abf","$version":"A","$type":"Unity.VisualScripting.SubgraphUnit","$id":"48"},{"nest":{"source":"Macro","macro":6,"embed":null},"defaultValues":{"Var
+      Name":{"$content":"isDashing","$type":"System.String"},"Anim Name":{"$content":"Dash","$type":"System.String"}},"position":{"x":-778.0,"y":153.0},"guid":"33ce0375-2509-4377-8f7c-81ad2d9a856e","$version":"A","$type":"Unity.VisualScripting.SubgraphUnit","$id":"51"},{"nest":{"source":"Macro","macro":7,"embed":null},"defaultValues":{"Var
+      Name":{"$content":"isFalling","$type":"System.String"},"Anim Name":{"$content":"Fall","$type":"System.String"}},"position":{"x":-958.0,"y":-226.0},"guid":"2c4e8e1f-8dee-4678-a041-c567fde26f2c","$version":"A","$type":"Unity.VisualScripting.SubgraphUnit","$id":"54"},{"defaultValues":{},"position":{"x":-1693.0,"y":-317.0},"guid":"50613cdf-cc89-4659-9eda-5f59f30b79b7","$version":"A","$type":"Unity.VisualScripting.GraphInput","$id":"57"},{"nest":{"source":"Macro","macro":8,"embed":null},"defaultValues":{"Var
+      Name":{"$content":"Sprinting","$type":"System.String"},"Anim Name":{"$content":"Run","$type":"System.String"}},"position":{"x":-302.0,"y":-655.0},"guid":"cbeec96f-b3eb-496a-92de-b1479c20cbdd","$version":"A","$type":"Unity.VisualScripting.SubgraphUnit","$id":"59"},{"nest":{"source":"Macro","macro":9,"embed":null},"defaultValues":{"Var
+      Name":{"$content":"hasJumped","$type":"System.String"},"Anim Name":{"$content":"Jump","$type":"System.String"}},"position":{"x":-1521.0,"y":136.0},"guid":"13b2729f-5a78-4200-862b-d011aaff1a13","$version":"A","$type":"Unity.VisualScripting.SubgraphUnit","$id":"62"},{"nest":{"source":"Macro","macro":10,"embed":null},"defaultValues":{"Var
+      Name":{"$content":"isWallSliding","$type":"System.String"},"Anim Name":{"$content":"WallSlide","$type":"System.String"}},"position":{"x":-476.0,"y":153.0},"guid":"13521131-9a0c-407b-ab75-698cc21d1faf","$version":"A","$type":"Unity.VisualScripting.SubgraphUnit","$id":"65"},{"defaultValues":{},"position":{"x":661.0,"y":-280.0},"guid":"dd7ac77f-c639-4c73-872c-4bc6ecb3e9cd","$version":"A","$type":"Unity.VisualScripting.GraphOutput","$id":"68"},{"nest":{"source":"Macro","macro":11,"embed":null},"defaultValues":{"Var
+      Name":{"$content":"isCrouchIdle","$type":"System.String"},"Anim Name":{"$content":"CrouchIdle","$type":"System.String"}},"position":{"x":-1072.0,"y":-658.0},"guid":"973e6f7f-0b5f-4388-8b50-38f47f1a3ef1","$version":"A","$type":"Unity.VisualScripting.SubgraphUnit","$id":"70"},{"sourceUnit":{"$ref":"51"},"sourceKey":"Output","destinationUnit":{"$ref":"68"},"destinationKey":"Dash
+      Out","guid":"d6ca45c7-52fe-4a2d-96d3-ec1cb7a8d6f2","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"59"},"sourceKey":"Output","destinationUnit":{"$ref":"68"},"destinationKey":"Run
+      Out","guid":"3a73a167-93e2-4e4b-a39b-dea5758960d5","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"65"},"sourceKey":"Output","destinationUnit":{"$ref":"68"},"destinationKey":"Wall
+      Slide Out","guid":"17546063-2460-46c9-8447-b1ab7caaa758","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"48"},"sourceKey":"Output","destinationUnit":{"$ref":"68"},"destinationKey":"Idle
+      Out","guid":"5f58d42c-4582-4020-a43c-3b89730c0a46","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"57"},"sourceKey":"Slide
+      End","destinationUnit":{"$ref":"42"},"destinationKey":"Input","guid":"92c753cb-8638-4179-a8a8-3f95bcf9d2a9","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"42"},"sourceKey":"Output","destinationUnit":{"$ref":"68"},"destinationKey":"Slide
+      End Out","guid":"2908b8b8-8792-4cca-86fa-0d60c2601943","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"57"},"sourceKey":"Jump","destinationUnit":{"$ref":"62"},"destinationKey":"Input","guid":"d7fcf177-a6b1-4733-b4cc-50efcfa57306","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"57"},"sourceKey":"Fall","destinationUnit":{"$ref":"37"},"destinationKey":"enter","guid":"80c76ffa-5822-40ee-ba9b-0e6464bb5f08","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"37"},"sourceKey":"0","destinationUnit":{"$ref":"54"},"destinationKey":"Input","guid":"e572fb45-6d0c-4e2d-967c-5bfc1ec3d0a5","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"54"},"sourceKey":"Output","destinationUnit":{"$ref":"68"},"destinationKey":"Fall
+      Out","guid":"7fa13095-f20c-4a34-99fe-593f16f0c590","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"39"},"sourceKey":"Output","destinationUnit":{"$ref":"68"},"destinationKey":"Crouch
+      Walk Out","guid":"7665e8c9-a303-4bfd-86ff-985efbab9806","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"70"},"sourceKey":"Output","destinationUnit":{"$ref":"68"},"destinationKey":"Crouch
+      Idle Out","guid":"9ac3f108-35f9-4c74-8d01-463968596349","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"45"},"sourceKey":"Output","destinationUnit":{"$ref":"68"},"destinationKey":"Walk
+      Out","guid":"bfd95849-3a36-4d61-9f98-e2b36e96c241","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"57"},"sourceKey":"WallSlide","destinationUnit":{"$ref":"65"},"destinationKey":"Input","guid":"d2eb4ab8-83d7-46a8-8cc9-9065bfd44351","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"57"},"sourceKey":"CrouchWalk","destinationUnit":{"$ref":"39"},"destinationKey":"Input","guid":"4b9a10b5-08fc-46f6-8713-a3b067df6cf3","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"57"},"sourceKey":"Run","destinationUnit":{"$ref":"59"},"destinationKey":"Input","guid":"a0cdfc1f-d29e-4630-acf3-52bf7201b92a","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"57"},"sourceKey":"Dash","destinationUnit":{"$ref":"51"},"destinationKey":"Input","guid":"78f19a02-b8ef-4003-94d5-923b68b9b5f5","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"31"},"sourceKey":"Output","destinationUnit":{"$ref":"68"},"destinationKey":"Slide
+      Start Out","guid":"cf6aeb3e-0d15-40e8-8e56-2ce66711fa12","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"62"},"sourceKey":"Output","destinationUnit":{"$ref":"68"},"destinationKey":"Jump
+      Out","guid":"cee2c4d7-a26f-478e-8edf-ac7a89332c1a","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"57"},"sourceKey":"Walk","destinationUnit":{"$ref":"45"},"destinationKey":"Input","guid":"a15991cc-0e83-4319-b6e9-8d6868159837","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"57"},"sourceKey":"CrouchIdle","destinationUnit":{"$ref":"70"},"destinationKey":"Input","guid":"65181a95-6ebf-4794-bb20-766624619147","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"37"},"sourceKey":"1","destinationUnit":{"$ref":"34"},"destinationKey":"Input","guid":"7d30d5be-7fcd-490c-ab82-8e873c7b6218","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"57"},"sourceKey":"Idle","destinationUnit":{"$ref":"48"},"destinationKey":"Input","guid":"e8da3e6d-c66a-4493-8f72-b2197052360f","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"57"},"sourceKey":"Slide
+      Start","destinationUnit":{"$ref":"31"},"destinationKey":"Input","guid":"4fc391c0-1672-46ff-a811-abe71597800d","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"34"},"sourceKey":"Output","destinationUnit":{"$ref":"68"},"destinationKey":"Fall
+      Out","guid":"fa802dd6-e0f1-4807-a40d-60ecb2f408e9","$type":"Unity.VisualScripting.ControlConnection"}],"$version":"A"}}'
+    _objectReferences:
+    - {fileID: 11400000, guid: 64ede9a170b401e45bfb0b3f88be2a80, type: 2}
+    - {fileID: 11400000, guid: 64ede9a170b401e45bfb0b3f88be2a80, type: 2}
+    - {fileID: 11400000, guid: 64ede9a170b401e45bfb0b3f88be2a80, type: 2}
+    - {fileID: 11400000, guid: 64ede9a170b401e45bfb0b3f88be2a80, type: 2}
+    - {fileID: 11400000, guid: 64ede9a170b401e45bfb0b3f88be2a80, type: 2}
+    - {fileID: 11400000, guid: 64ede9a170b401e45bfb0b3f88be2a80, type: 2}
+    - {fileID: 11400000, guid: 64ede9a170b401e45bfb0b3f88be2a80, type: 2}
+    - {fileID: 11400000, guid: 64ede9a170b401e45bfb0b3f88be2a80, type: 2}
+    - {fileID: 11400000, guid: 64ede9a170b401e45bfb0b3f88be2a80, type: 2}
+    - {fileID: 11400000, guid: 64ede9a170b401e45bfb0b3f88be2a80, type: 2}
+    - {fileID: 11400000, guid: 64ede9a170b401e45bfb0b3f88be2a80, type: 2}
+    - {fileID: 11400000, guid: 64ede9a170b401e45bfb0b3f88be2a80, type: 2}

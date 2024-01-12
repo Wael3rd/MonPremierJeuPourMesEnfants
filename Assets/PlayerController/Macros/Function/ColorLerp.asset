@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95e66c6366d904e98bc83428217d4fd7, type: 3}
+  m_Name: ColorLerp
+  m_EditorClassIdentifier: 
+  _data:
+    _json: '{"graph":{"variables":{"collection":{"$content":[],"$version":"A"},"$version":"A"},"controlInputDefinitions":[{"key":"Update
+      Input","label":null,"summary":null,"hideLabel":false}],"controlOutputDefinitions":[{"key":"Output","label":null,"summary":null,"hideLabel":false}],"valueInputDefinitions":[{"hasDefaultValue":false,"defaultValue":{"$content":0.0,"$type":"System.Single"},"_type":"System.Single","key":"Duration","label":null,"summary":null,"hideLabel":false},{"hasDefaultValue":true,"defaultValue":{"r":1.0,"g":1.0,"b":1.0,"a":1.0,"$type":"UnityEngine.Color"},"_type":"UnityEngine.Color","key":"Color
+      1","label":null,"summary":null,"hideLabel":false},{"hasDefaultValue":true,"defaultValue":{"r":1.0,"g":1.0,"b":1.0,"a":1.0,"$type":"UnityEngine.Color"},"_type":"UnityEngine.Color","key":"Color
+      2","label":null,"summary":null,"hideLabel":false}],"valueOutputDefinitions":[],"title":null,"summary":null,"pan":{"x":-34.15742,"y":126.1761},"zoom":1.0,"elements":[{"defaultValues":{},"position":{"x":-494.0,"y":-53.0},"guid":"5ea07a9e-016b-4d67-b69f-c55ab76d467a","$version":"A","$type":"Bolt.GraphInput","$id":"14"},{"chainable":false,"member":{"name":"Lerp","parameterTypes":["UnityEngine.Color","UnityEngine.Color","System.Single"],"targetType":"UnityEngine.Color","targetTypeName":"UnityEngine.Color","$version":"A"},"defaultValues":{"%a":{"r":1.0,"g":1.0,"b":1.0,"a":1.0,"$type":"UnityEngine.Color"},"%b":{"r":1.0,"g":1.0,"b":1.0,"a":1.0,"$type":"UnityEngine.Color"},"%t":{"$content":0.0,"$type":"System.Single"}},"position":{"x":-32.0,"y":-34.0},"guid":"1f7f2fae-d2f9-4052-9efe-176501db82d9","$version":"A","$type":"Bolt.InvokeMember","$id":"16"},{"defaultValues":{"duration":{"$content":1.0,"$type":"System.Single"},"unscaledTime":{"$content":false,"$type":"System.Boolean"}},"position":{"x":-281.0,"y":76.0},"guid":"f93a7aad-3eb9-46cf-930f-4cdb0372c837","$version":"A","$type":"Bolt.Timer","$id":"19"},{"chainable":false,"member":{"name":"color","parameterTypes":null,"targetType":"UnityEngine.SpriteRenderer","targetTypeName":"UnityEngine.SpriteRenderer","$version":"A"},"defaultValues":{"target":null,"input":{"r":1.0,"g":1.0,"b":1.0,"a":1.0,"$type":"UnityEngine.Color"}},"position":{"x":96.0,"y":-31.0},"guid":"4ef0104c-9e36-4b31-9eee-3465f39d6d63","$version":"A","$type":"Bolt.SetMember","$id":"21"},{"defaultValues":{},"position":{"x":283.0,"y":-29.0},"guid":"60f9fb53-158a-4af3-8380-80baf48086e5","$version":"A","$type":"Bolt.GraphOutput","$id":"24"},{"sourceUnit":{"$ref":"19"},"sourceKey":"tick","destinationUnit":{"$ref":"16"},"destinationKey":"enter","guid":"b99d6767-2f52-4c0c-b375-e24d11080a9f","$type":"Bolt.ControlConnection"},{"sourceUnit":{"$ref":"16"},"sourceKey":"exit","destinationUnit":{"$ref":"21"},"destinationKey":"assign","guid":"24fb1780-55eb-40e9-b88d-199ab4fb4bfa","$type":"Bolt.ControlConnection"},{"sourceUnit":{"$ref":"14"},"sourceKey":"Update
+      Input","destinationUnit":{"$ref":"19"},"destinationKey":"toggle","guid":"405682c2-c677-4b99-9517-58cc8ca1cd70","$type":"Bolt.ControlConnection"},{"sourceUnit":{"$ref":"21"},"sourceKey":"assigned","destinationUnit":{"$ref":"24"},"destinationKey":"Output","guid":"5b325e6b-e2e7-4f5c-99a8-2606c3c8883b","$type":"Bolt.ControlConnection"},{"sourceUnit":{"$ref":"19"},"sourceKey":"elapsedSeconds","destinationUnit":{"$ref":"16"},"destinationKey":"%t","guid":"1fb0b97d-d4ed-4cac-9266-b52868d1fdb8","$type":"Bolt.ValueConnection"},{"sourceUnit":{"$ref":"16"},"sourceKey":"result","destinationUnit":{"$ref":"21"},"destinationKey":"input","guid":"65cf2df4-8e1d-4e85-a95f-68ee3e22588b","$type":"Bolt.ValueConnection"},{"sourceUnit":{"$ref":"14"},"sourceKey":"Duration","destinationUnit":{"$ref":"19"},"destinationKey":"duration","guid":"e8739c28-769f-4530-9e2d-d1dcd3840b49","$type":"Bolt.ValueConnection"},{"sourceUnit":{"$ref":"14"},"sourceKey":"Color
+      1","destinationUnit":{"$ref":"16"},"destinationKey":"%a","guid":"32dbc47b-68dc-48df-988d-a42925d244a5","$type":"Bolt.ValueConnection"},{"sourceUnit":{"$ref":"14"},"sourceKey":"Color
+      2","destinationUnit":{"$ref":"16"},"destinationKey":"%b","guid":"7020768e-6ee0-4bdf-921f-30ac64188890","$type":"Bolt.ValueConnection"}],"$version":"A"}}'
+    _objectReferences: []
