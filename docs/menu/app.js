@@ -53,10 +53,15 @@ function setQty(k, q) {
 const addOne = k => setQty(k, (cart.get(k) || 0) + 1);
 
 /* ============================== rendu ============================== */
+/* vignette de la catégorie : photo découpée dans la carte, sinon emoji */
+const thumb = (c, cls) => c.photo
+  ? `<img class="${cls}" src="img/${c.photo}.jpg" alt="" width="320" height="320" loading="lazy" decoding="async">`
+  : `<span class="${cls} ${cls}-emoji">${c.emoji}</span>`;
+
 function buildCats() {
   const wrap = $('#catsScroll');
   wrap.innerHTML = CATEGORIES.map(c =>
-    `<button class="cat-pill" data-cat="${c.id}" aria-current="false">${c.emoji} ${c.label}</button>`
+    `<button class="cat-pill" data-cat="${c.id}" aria-current="false">${thumb(c, 'pill-thumb')}${c.label}</button>`
   ).join('');
   wrap.addEventListener('click', e => {
     const b = e.target.closest('.cat-pill');
@@ -108,7 +113,8 @@ function buildSections() {
     return `
     <section class="section" id="sec-${c.id}" data-sec="${c.id}">
       <div class="section-head">
-        <h2>${c.emoji} ${c.label}</h2>
+        ${thumb(c, 'sec-thumb')}
+        <h2>${c.label}</h2>
         <span class="count">${items.length} article${items.length > 1 ? 's' : ''}</span>
       </div>
       <div class="grid">
@@ -304,9 +310,21 @@ function setupScrollSpy() {
 }
 
 /* ============================= démarrage =========================== */
+/* bandeau défilant de photos sous le hero */
+function buildStrip() {
+  const shots = CATEGORIES.filter(c => c.photo);
+  if (!shots.length) return;
+  const one = shots.map(c =>
+    `<img src="img/${c.photo}.jpg" alt="${c.label}" width="320" height="320" loading="lazy" decoding="async">`
+  ).join('');
+  /* la liste est doublée pour que la boucle se referme sans saut */
+  $('#strip').innerHTML = `<div class="strip-track">${one}${one}</div>`;
+}
+
 function boot() {
   load();
   buildCats();
+  buildStrip();
   buildSections();
   refreshBadges();
   setupScrollSpy();

@@ -43,11 +43,28 @@ Aucune requête vers un CDN, la page fonctionne hors-ligne.
 
 Pour changer un prix : une seule ligne dans `data.js`.
 
-## Réserve sur un prix
+## Les photos
 
-La pizza **Fruits de mer** n'est proposée qu'en taille **L (26.000 DT)** :
-sur la carte, le prix de la taille M est masqué par une photo. Il n'a pas
-été inventé. Dès que vous me le donnez, c'est une ligne à ajouter.
+Les vignettes de catégories sont **découpées dans la photo de la carte**
+du restaurant, puis recadrées pour écarter au maximum les colonnes de prix
+imprimées par-dessus. Elles sont dans `img/`, en 320 × 320 (236 Ko au total
+pour les 16).
+
+Les photos verticales (les verres : mojito, smoothie, jus) sont complétées
+sur les côtés plutôt que recadrées en carré — un recadrage centré coupait
+le haut et le bas du verre.
+
+Cinq catégories gardent leur emoji, faute de photo exploitable :
+
+| Catégorie | Raison |
+|---|---|
+| Pizza | quatre lignes de prix couvrent toute la photo |
+| Brunch | vernis plastifié craquelé, image illisible |
+| Omelettes, Spécial, Petit-déj, Thé, Frappuccino | pas de photo sur la carte |
+
+Pour remplacer une vignette : déposez votre image dans `img/` sous le même
+nom (`pizza.jpg` par exemple) et ajoutez `photo: 'pizza'` à la catégorie
+dans `data.js`.
 
 ## Portée
 

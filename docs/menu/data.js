@@ -9,30 +9,37 @@ export const CURRENCY = 'DT';
 /** 19000 -> "19.000" */
 export const fmt = m => (m / 1000).toFixed(3);
 
+/* `photo` : vignette découpée dans la photo de la carte du restaurant.
+   Absente là où la carte ne permet rien d'exploitable :
+     - pizza  : quatre lignes de prix imprimées couvrent toute la photo
+     - brunch : le vernis plastifié est craquelé, l'image est illisible
+     - omelette, spécial, petit-déj, thé, frappuccino : pas de photo sur
+       la carte pour ces rubriques.
+   Ces catégories gardent leur emoji.                                    */
 export const CATEGORIES = [
   { id: 'pizza',      label: 'Pizza',        emoji: '🍕' },
-  { id: 'sandwiches', label: 'Sandwiches',   emoji: '🥪' },
-  { id: 'makloub',    label: 'Makloub',      emoji: '🌯' },
-  { id: 'baguettes',  label: 'Baguettes',    emoji: '🥖' },
-  { id: 'tacos',      label: 'Tacos',        emoji: '🌮' },
-  { id: 'salades',    label: 'Salades',      emoji: '🥗' },
-  { id: 'briks',      label: 'Briks',        emoji: '🥟' },
-  { id: 'plats',      label: 'Plats',        emoji: '🍽️' },
-  { id: 'pates',      label: 'Pâtes & Ojja', emoji: '🍝' },
+  { id: 'sandwiches', label: 'Sandwiches',   emoji: '🥪', photo: 'sandwiches' },
+  { id: 'makloub',    label: 'Makloub',      emoji: '🌯', photo: 'makloub' },
+  { id: 'baguettes',  label: 'Baguettes',    emoji: '🥖', photo: 'baguettes' },
+  { id: 'tacos',      label: 'Tacos',        emoji: '🌮', photo: 'tacos' },
+  { id: 'salades',    label: 'Salades',      emoji: '🥗', photo: 'salades' },
+  { id: 'briks',      label: 'Briks',        emoji: '🥟', photo: 'briks' },
+  { id: 'plats',      label: 'Plats',        emoji: '🍽️', photo: 'plats' },
+  { id: 'pates',      label: 'Pâtes & Ojja', emoji: '🍝', photo: 'pates' },
   { id: 'omelette',   label: 'Omelettes',    emoji: '🍳' },
   { id: 'special',    label: 'Spécial',      emoji: '⭐' },
   { id: 'petitdej',   label: 'Petit-déj',    emoji: '🥐' },
   { id: 'brunch',     label: 'Brunch',       emoji: '🥞' },
-  { id: 'crepes',     label: 'Crêpes',       emoji: '🫓' },
-  { id: 'desserts',   label: 'Desserts',     emoji: '🍰' },
-  { id: 'cafe',       label: 'Café & Eau',   emoji: '☕' },
-  { id: 'icecoffee',  label: 'Ice Coffee',   emoji: '🧊' },
+  { id: 'crepes',     label: 'Crêpes',       emoji: '🫓', photo: 'crepes' },
+  { id: 'desserts',   label: 'Desserts',     emoji: '🍰', photo: 'desserts' },
+  { id: 'cafe',       label: 'Café & Eau',   emoji: '☕', photo: 'cafe' },
+  { id: 'icecoffee',  label: 'Ice Coffee',   emoji: '🧊', photo: 'icecoffee' },
   { id: 'the',        label: 'Thé & Ice Thé',emoji: '🍵' },
   { id: 'frappuccino',label: 'Frappuccino',  emoji: '🥤' },
-  { id: 'smoothie',   label: 'Smoothie',     emoji: '🍹' },
-  { id: 'milkshake',  label: 'Milk-shake',   emoji: '🥛' },
-  { id: 'mojito',     label: 'Mojito',       emoji: '🍸' },
-  { id: 'jus',        label: 'Jus frais',    emoji: '🍊' }
+  { id: 'smoothie',   label: 'Smoothie',     emoji: '🍹', photo: 'smoothie' },
+  { id: 'milkshake',  label: 'Milk-shake',   emoji: '🥛', photo: 'milkshake' },
+  { id: 'mojito',     label: 'Mojito',       emoji: '🍸', photo: 'mojito' },
+  { id: 'jus',        label: 'Jus frais',    emoji: '🍊', photo: 'jus' }
 ];
 
 /* Un article : { id, cat, name, price } ou, si plusieurs tailles :
@@ -47,8 +54,7 @@ export const ITEMS = [
   { id: 'pz-vegeta',    cat: 'pizza', name: 'Végétarienne',  sizes: [{ label: 'L', price: 13000 }, { label: 'M', price: 11000 }] },
   { id: 'pz-4fromages', cat: 'pizza', name: '4 Fromages',    sizes: [{ label: 'L', price: 17000 }, { label: 'M', price: 15000 }] },
   { id: 'pz-escalope',  cat: 'pizza', name: 'Escalope',      sizes: [{ label: 'L', price: 16000 }, { label: 'M', price: 14000 }] },
-  { id: 'pz-fdm',       cat: 'pizza', name: 'Fruits de mer', sizes: [{ label: 'L', price: 26000 }],
-    note: 'Le prix M était masqué par une photo sur la carte' },
+  { id: 'pz-fdm',       cat: 'pizza', name: 'Fruits de mer', sizes: [{ label: 'L', price: 26000 }, { label: 'M', price: 20000 }] },
 
   /* -------------------------- SANDWICHES TABOUNA ---------------------- */
   { id: 'sw-kafteji',   cat: 'sandwiches', name: 'Kafteji',           price: 6000 },

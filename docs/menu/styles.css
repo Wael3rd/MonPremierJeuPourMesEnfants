@@ -154,6 +154,25 @@ button { font-family: inherit; color: inherit; background: none; border: 0; curs
 }
 .hero-stats span { font-size: clamp(13px, 1.3vw, 17px); color: var(--text-2); }
 
+/* ====================== Bandeau de photos ========================== */
+.strip {
+  overflow: hidden;
+  padding: clamp(18px, 3vw, 34px) 0 clamp(6px, 1vw, 14px);
+  mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+}
+.strip-track {
+  display: flex; gap: clamp(10px, 1.4vw, 18px); width: max-content;
+  animation: marquee 46s linear infinite;
+}
+.strip img {
+  width: clamp(108px, 13vw, 168px); height: clamp(108px, 13vw, 168px);
+  object-fit: cover; border-radius: var(--r-m);
+  background: var(--bg-2); flex: 0 0 auto;
+}
+@keyframes marquee { to { transform: translateX(-50%); } }
+.strip:hover .strip-track { animation-play-state: paused; }
+
 /* ========================= Rail de catégories ====================== */
 .cats {
   position: sticky; top: var(--nav-h); z-index: 50;
@@ -174,16 +193,29 @@ button { font-family: inherit; color: inherit; background: none; border: 0; curs
 .cat-pill {
   flex: 0 0 auto;
   font-size: 17px; font-weight: 600; letter-spacing: -.015em;
-  padding: 10px 18px; border-radius: 999px;
+  padding: 7px 18px 7px 7px; border-radius: 999px;
   background: var(--bg-2); color: var(--text);
   white-space: nowrap; transition: background .2s, color .2s, transform .2s;
+  display: inline-flex; align-items: center; gap: 10px;
 }
+.pill-thumb {
+  width: 32px; height: 32px; border-radius: 50%;
+  object-fit: cover; flex: 0 0 auto; background: var(--bg-3);
+}
+.pill-thumb-emoji { display: grid; place-items: center; font-size: 17px; }
 .cat-pill:hover { transform: translateY(-1px); }
 .cat-pill[aria-current='true'] { background: var(--text); color: var(--bg); }
 
 /* ============================ Sections ============================= */
 .section { max-width: 1440px; margin: 0 auto; padding: clamp(48px, 7vw, 100px) var(--pad) 0; }
-.section-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: clamp(24px, 3vw, 44px); flex-wrap: wrap; }
+.section-head { display: flex; align-items: center; gap: clamp(14px, 1.6vw, 22px); margin-bottom: clamp(24px, 3vw, 44px); flex-wrap: wrap; }
+.sec-thumb {
+  width: clamp(64px, 7vw, 96px); height: clamp(64px, 7vw, 96px);
+  border-radius: var(--r-m); object-fit: cover;
+  flex: 0 0 auto; background: var(--bg-2);
+  box-shadow: var(--shadow);
+}
+.sec-thumb-emoji { display: grid; place-items: center; font-size: clamp(34px, 4vw, 52px); box-shadow: none; }
 .section-head h2 {
   font-size: clamp(38px, 7vw, 82px); font-weight: 700;
   letter-spacing: -.045em; line-height: 1;
