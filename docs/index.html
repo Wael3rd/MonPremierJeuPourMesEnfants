@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5">
+<meta name="theme-color" content="#070912">
+<title>La Frise des Grandes Inventions</title>
+<meta name="description" content="Une frise interactive en 3D des grandes inventions de l’humanité, expliquée à trois niveaux : 7 ans, 12 ans et adultes.">
+
+<link rel="preload" href="fonts/bricolage-grotesque-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/familjen-grotesk-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%A1%3C/text%3E%3C/svg%3E">
+
+<!-- Three.js est auto-hébergé : aucune dépendance à un CDN, fonctionne hors-ligne -->
+<script type="importmap">
+{ "imports": { "three": "./vendor/three.module.js" } }
+</script>
+</head>
+<body>
+
+<div class="backdrop" id="backdrop"></div>
+<div class="grain"></div>
+
+<div id="app">
+
+  <header class="top">
+    <div class="brand">
+      <h1>La Frise des <em>Grandes Inventions</em></h1>
+      <span id="brandSub">18 idées qui ont changé le monde · fais glisser la frise</span>
+    </div>
+
+    <div class="levels" role="group" aria-label="Niveau d’explication">
+      <div class="thumb" id="thumb"></div>
+      <button data-lvl="cm2"    aria-pressed="true"><span class="ico">🧒</span><span class="lbl">7 ans</span></button>
+      <button data-lvl="cinq"   aria-pressed="false"><span class="ico">🧑‍🎓</span><span class="lbl">12 ans</span></button>
+      <button data-lvl="grands" aria-pressed="false"><span class="ico">👓</span><span class="lbl">Adulte</span></button>
+    </div>
+
+    <button class="icon-btn" id="quizBtn" title="Lancer le quiz" aria-label="Lancer le quiz">🎯</button>
+    <button class="icon-btn" id="playBtn" aria-pressed="false" title="Visite guidée automatique" aria-label="Visite guidée automatique">▶</button>
+  </header>
+
+  <main>
+    <section class="stage" id="stage" aria-label="Modèle 3D de l’invention">
+      <div class="stage-year" id="stageYear"></div>
+      <canvas id="scene"></canvas>
+      <button class="nav-arrow prev" id="prevBtn" aria-label="Invention précédente">‹</button>
+      <button class="nav-arrow next" id="nextBtn" aria-label="Invention suivante">›</button>
+      <div class="stage-hint" id="hint">Fais tourner l’objet avec le doigt · balaie pour changer</div>
+      <div class="loader" id="loader"><div><div class="spin"></div>Construction de l’atelier 3D…</div></div>
+    </section>
+
+    <article class="panel" id="panel" aria-live="polite"></article>
+  </main>
+
+  <nav class="rail" aria-label="Frise chronologique">
+    <div class="rail-scroll" id="railScroll">
+      <div class="rail-inner" id="railInner">
+        <div class="rail-line"></div>
+      </div>
+    </div>
+  </nav>
+
+</div>
+
+<!-- ---------------------------- quiz ---------------------------- -->
+<div class="sheet" id="quiz" role="dialog" aria-modal="true" aria-label="Quiz">
+  <div class="sheet-card" id="quizCard"></div>
+</div>
+
+<script type="module" src="app.js"></script>
+<noscript>
+  <p style="padding:30px;font-family:sans-serif">Cette frise a besoin de JavaScript pour fonctionner.</p>
+</noscript>
+</body>
+</html>
