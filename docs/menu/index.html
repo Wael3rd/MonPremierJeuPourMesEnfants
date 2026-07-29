@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<title>Pavillon — Commander</title>
+<meta name="description" content="La carte du Pavillon. Choisissez, ajoutez au panier, le total se calcule tout seul.">
+
+<link rel="preload" href="fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%BD%EF%B8%8F%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+
+<!-- ============================ Barre de nav ======================== -->
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="#top">Pavillon</a>
+    <button class="nav-bag" id="bagBtn" aria-label="Ouvrir le panier">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l-1 12H7L6 8Zm3 0V6a3 3 0 0 1 6 0v2"/></svg>
+      <span class="bag-count" id="bagCount" hidden>0</span>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ------------------------------ Hero --------------------------- -->
+  <section class="hero">
+    <p class="hero-eyebrow">La carte</p>
+    <h1 class="hero-title">Commandez.<br><span class="grad">Sans vous lever.</span></h1>
+    <p class="hero-sub">Toute la carte du Pavillon. Choisissez, le total se calcule tout seul.</p>
+    <div class="hero-stats">
+      <div><strong id="statItems">—</strong><span>plats &amp; boissons</span></div>
+      <div><strong id="statCats">—</strong><span>catégories</span></div>
+      <div><strong id="statMin">—</strong><span>à partir de</span></div>
+    </div>
+  </section>
+
+  <!-- --------------------- Rail de catégories ---------------------- -->
+  <nav class="cats" id="cats" aria-label="Catégories">
+    <div class="cats-scroll" id="catsScroll"></div>
+  </nav>
+
+  <!-- --------------------------- Sections -------------------------- -->
+  <div id="sections"></div>
+
+  <footer class="foot">
+    <p class="foot-big">Bon appétit.</p>
+    <p class="foot-small">
+      Prix relevés sur la carte du Pavillon, en dinars tunisiens.
+      Cette page calcule un total à titre indicatif&nbsp;: elle n’envoie aucune commande au restaurant.
+    </p>
+  </footer>
+</main>
+
+<!-- ==================== Barre de total (mobile) ==================== -->
+<div class="stickybar" id="stickybar" hidden>
+  <div class="stickybar-info">
+    <span class="stickybar-count" id="sbCount">0 article</span>
+    <span class="stickybar-total" id="sbTotal">0.000 DT</span>
+  </div>
+  <button class="btn btn-blue" id="sbOpen">Voir le panier</button>
+</div>
+
+<!-- =========================== Le panier =========================== -->
+<div class="scrim" id="scrim" hidden></div>
+
+<aside class="bag" id="bag" role="dialog" aria-modal="true" aria-label="Votre panier" hidden>
+  <header class="bag-head">
+    <h2>Votre panier</h2>
+    <button class="icon-round" id="bagClose" aria-label="Fermer le panier">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </header>
+
+  <div class="bag-body" id="bagBody"></div>
+
+  <footer class="bag-foot" id="bagFoot"></footer>
+</aside>
+
+<!-- ====================== Récapitulatif final ====================== -->
+<div class="sheet" id="done" hidden>
+  <div class="sheet-card">
+    <div class="done-check" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"/></svg>
+    </div>
+    <h2>Votre commande</h2>
+    <p class="done-sub">Montrez cet écran au serveur, ou copiez le récapitulatif.</p>
+    <pre class="done-recap" id="doneRecap"></pre>
+    <div class="done-actions">
+      <button class="btn btn-blue" id="doneCopy">Copier le récapitulatif</button>
+      <button class="btn btn-ghost" id="doneClose">Continuer</button>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
