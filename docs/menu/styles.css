@@ -224,78 +224,78 @@ button { font-family: inherit; color: inherit; background: none; border: 0; curs
 
 .grid {
   display: grid; gap: clamp(12px, 1.6vw, 22px);
-  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
 }
 
 /* ============================== Carte ============================== */
+/* Cartouche façon Deliveroo / Uber Eats : le texte à gauche, la photo
+   carrée à droite, et le bouton d'ajout posé sur le coin de la photo. */
 .card {
   background: var(--card);
-  border-radius: var(--r-l);
-  overflow: hidden;
-  display: flex; flex-direction: column;
-  transition: transform .35s cubic-bezier(.22, 1, .36, 1), box-shadow .35s;
+  border-radius: var(--r-m);
+  display: grid; grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(14px, 1.6vw, 20px); align-items: start;
+  padding: clamp(14px, 1.6vw, 18px);
+  transition: transform .3s cubic-bezier(.22, 1, .36, 1), box-shadow .3s;
   position: relative;
 }
-.card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+.card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
 .card.in-bag { outline: 2px solid var(--blue); outline-offset: -2px; }
 
-/* la photo, en tête de cartouche */
-.card-media-wrap { position: relative; }
-.card-media {
-  display: block; width: 100%;
-  /* height:auto est indispensable : les attributs width/height de la
-     balise <img> (présents pour réserver la place au chargement) fixent
-     sinon une hauteur définie qui neutralise aspect-ratio. */
-  height: auto; aspect-ratio: 4 / 3;
-  object-fit: cover; background: var(--bg-3);
+.c-txt { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.card h3 {
+  font-size: clamp(19px, 1.9vw, 23px); font-weight: 600;
+  letter-spacing: -.025em; line-height: 1.2;
 }
-.card:hover .card-media { transform: scale(1.03); }
-.card-media { transition: transform .5s cubic-bezier(.22, 1, .36, 1); }
-.card-media-ph {
-  display: grid; place-items: center;
-  font-size: clamp(52px, 6vw, 76px);
+.c-desc {
+  font-size: 15px; color: var(--text-2); line-height: 1.35; letter-spacing: -.01em;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.c-note { font-size: 13.5px; color: var(--text-2); font-style: italic; }
+.c-price {
+  margin-top: auto; padding-top: 4px;
+  font-size: clamp(19px, 2vw, 24px); font-weight: 700;
+  letter-spacing: -.03em; font-variant-numeric: tabular-nums;
+}
+.c-price small { font-size: .6em; font-weight: 600; color: var(--text-2); }
+
+/* la photo */
+.c-media { position: relative; flex: 0 0 auto; }
+.c-img {
+  display: block;
+  width: clamp(104px, 11vw, 132px); height: clamp(104px, 11vw, 132px);
+  object-fit: cover; border-radius: 14px;
+  background: var(--bg-3);
+}
+.c-img-ph {
+  display: grid; place-items: center; font-size: 44px;
   background: radial-gradient(120% 100% at 50% 0%, var(--bg-3), var(--bg-2));
 }
-
-.card-body {
-  padding: clamp(18px, 2.1vw, 26px);
-  display: flex; flex-direction: column; gap: 12px; flex: 1;
-}
-
-.card-star {
-  position: absolute; top: 14px; left: 14px;
-  font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+.c-star {
+  position: absolute; top: -6px; left: -6px;
+  font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
   color: #fff; background: linear-gradient(96deg, #ff5f6d, #a25cff);
-  padding: 5px 11px; border-radius: 999px;
+  padding: 4px 9px; border-radius: 999px;
   box-shadow: 0 4px 14px rgba(0, 0, 0, .3);
-}
-/* pastille de quantité, sur la photo */
-.card-badge {
-  position: absolute; top: 12px; right: 12px;
-  min-width: 34px; height: 34px; padding: 0 10px;
-  background: var(--blue); color: #fff;
-  border-radius: 999px; font-size: 17px; font-weight: 700;
-  display: grid; place-items: center;
-  font-variant-numeric: tabular-nums;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, .3);
-  animation: pop .35s cubic-bezier(.22, 1.4, .36, 1);
-}
-.card h3 {
-  font-size: clamp(24px, 2.6vw, 34px); font-weight: 700;
-  letter-spacing: -.035em; line-height: 1.08;
-}
-.card .desc { font-size: 16px; color: var(--text-2); line-height: 1.4; letter-spacing: -.01em; }
-.card .note {
-  font-size: 14px; color: var(--text-2); font-style: italic;
-  border-left: 2px solid var(--line-2); padding-left: 10px;
 }
 
-.price {
-  font-size: clamp(30px, 3.4vw, 44px); font-weight: 700;
-  letter-spacing: -.045em; font-variant-numeric: tabular-nums;
-  margin-top: auto; display: flex; align-items: baseline; gap: 7px;
+/* bouton d'ajout posé sur le coin de la photo */
+.c-ctl { position: absolute; right: -8px; bottom: -8px; }
+.c-add {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--bg); color: var(--text);
+  border: 1px solid var(--line);
+  display: grid; place-items: center;
+  font-size: 25px; font-weight: 400; line-height: 1; padding-bottom: 3px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, .18);
+  transition: .18s;
 }
-.price small { font-size: .45em; font-weight: 600; color: var(--text-2); letter-spacing: -.01em; }
+.c-add:hover { background: var(--blue); color: #fff; border-color: transparent; transform: scale(1.08); }
+.c-add:active { transform: scale(.94); }
+.c-ctl .stepper {
+  background: var(--bg); box-shadow: 0 3px 10px rgba(0, 0, 0, .18);
+  border: 1px solid var(--line);
+}
 
 /* contrôle segmenté des tailles */
 .sizes {
@@ -547,9 +547,6 @@ button { font-family: inherit; color: inherit; background: none; border: 0; curs
   :root { --nav-h: 52px; --cats-h: 62px; }
   body { font-size: 18px; }
   .grid { grid-template-columns: 1fr; }
-  .card { border-radius: var(--r-m); }
-  /* photo moins haute en colonne unique, sinon la page s'allonge trop */
-  .card-media { aspect-ratio: 16 / 9; }
   .bag {
     top: auto; left: 0; right: 0; bottom: 0; width: 100%;
     height: 92dvh; border-radius: var(--r-xl) var(--r-xl) 0 0;

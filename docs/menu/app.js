@@ -60,22 +60,51 @@ const thumb = (c, cls) => c.photo
   ? `<img class="${cls}" src="img/${c.photo}.jpg" alt="" width="320" height="320" loading="lazy" decoding="async">`
   : `<span class="${cls} ${cls}-emoji">${c.emoji}</span>`;
 
-/* Photo d'un article. `photo` sur l'article l'emporte ; à défaut on
-   retombe sur celle de sa catégorie. Renvoie null s'il n'y a rien : la
-   carte affiche alors un aplat avec l'emoji, plutôt qu'un trou. */
+/* Photo d'un article.
+   - `photo` numérique  -> identifiant Pexels, servi depuis leur CDN ;
+   - `photo` texte      -> fichier local img/items/<nom>.jpg ;
+   - sinon              -> photo de la catégorie, puis aplat à l'emoji.
+   Le repli est câblé en dur sur l'élément (data-fb) : si le CDN ne
+   répond pas, la carte retombe sur la vignette locale au lieu d'afficher
+   une image cassée. */
+const pexels = id =>
+  `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop`;
+
 function photoFor(it) {
-  if (it.photo) return `img/items/${it.photo}.jpg`;
-  const c = catById.get(it.cat);
-  return c && c.photo ? `img/${c.photo}.jpg` : null;
+  if (typeof it.photo === 'number') return pexels(it.photo);
+  if (typeof it.photo === 'string') return `img/items/${it.photo}.jpg`;
+  return null;
 }
+const catPhoto = it => {
+  const c = catById.get(it.cat);
+  return c && c.photo ? `img/${c.photo}.jpg` : '';
+};
 
 function mediaHTML(it) {
-  const src = photoFor(it);
+  const src = photoFor(it) || catPhoto(it);
+  const fb = photoFor(it) ? catPhoto(it) : '';
   const c = catById.get(it.cat) || {};
   return src
-    ? `<img class="card-media" src="${src}" alt="${it.name}" width="320" height="320" loading="lazy" decoding="async">`
-    : `<div class="card-media card-media-ph" aria-hidden="true">${c.emoji || '🍽️'}</div>`;
+    ? `<img class="c-img" src="${src}"${fb ? ` data-fb="${fb}"` : ''} alt="${it.name}"
+            loading="lazy" decoding="async">`
+    : `<div class="c-img c-img-ph" aria-hidden="true">${c.emoji || '🍽️'}</div>`;
 }
+
+/* une image qui ne charge pas retombe sur la vignette de sa catégorie,
+   puis sur un aplat — jamais d'icône « image cassée » */
+document.addEventListener('error', e => {
+  const img = e.target;
+  if (!(img instanceof HTMLImageElement) || !img.classList.contains('c-img')) return;
+  const fb = img.dataset.fb;
+  if (fb) { img.dataset.fb = ''; img.src = fb; return; }
+  const ph = document.createElement('div');
+  ph.className = 'c-img c-img-ph';
+  ph.setAttribute('aria-hidden', 'true');
+  const card = img.closest('.card');
+  const cat = card && catById.get((byId.get(card.dataset.card) || {}).cat);
+  ph.textContent = (cat && cat.emoji) || '🍽️';
+  img.replaceWith(ph);
+}, true);
 
 function buildCats() {
   const wrap = $('#catsScroll');
@@ -104,27 +133,26 @@ function cardHTML(it) {
     </div>` : '';
 
   const control = qty > 0 ? `
-    <div class="stepper">
+    <div class="stepper sm">
       <button data-act="dec" data-key="${k}" aria-label="Retirer un ${it.name}">−</button>
       <span class="qty">${qty}</span>
       <button data-act="inc" data-key="${k}" aria-label="Ajouter un ${it.name}">+</button>
     </div>` : `
-    <button class="btn btn-blue" data-act="add" data-key="${k}">Ajouter</button>`;
+    <button class="c-add" data-act="add" data-key="${k}" aria-label="Ajouter ${it.name}">+</button>`;
 
   return `
   <article class="card${qty > 0 ? ' in-bag' : ''}" data-card="${it.id}">
-    <div class="card-media-wrap">
-      ${mediaHTML(it)}
-      ${it.star ? '<span class="card-star">Spécial</span>' : ''}
-      ${qty > 0 ? `<span class="card-badge">${qty}</span>` : ''}
-    </div>
-    <div class="card-body">
+    <div class="c-txt">
       <h3>${it.name}</h3>
-      ${it.desc ? `<p class="desc">${it.desc}</p>` : ''}
-      ${it.note ? `<p class="note">${it.note}</p>` : ''}
+      ${it.desc ? `<p class="c-desc">${it.desc}</p>` : ''}
+      ${it.note ? `<p class="c-note">${it.note}</p>` : ''}
       ${sizesHTML}
-      <div class="price">${fmt(price)} <small>${CURRENCY}</small></div>
-      <div class="add-row">${control}</div>
+      <div class="c-price">${fmt(price)} <small>${CURRENCY}</small></div>
+    </div>
+    <div class="c-media">
+      ${mediaHTML(it)}
+      ${it.star ? '<span class="c-star">Spécial</span>' : ''}
+      <div class="c-ctl">${control}</div>
     </div>
   </article>`;
 }

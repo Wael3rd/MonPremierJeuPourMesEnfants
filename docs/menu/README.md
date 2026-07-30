@@ -45,6 +45,25 @@ Pour changer un prix : une seule ligne dans `data.js`.
 
 ## Les photos
 
+**Chaque article a sa propre photo**, référencée par son identifiant Pexels
+dans le champ `photo` de `data.js` et servie depuis le CDN de Pexels
+(licence libre, sans obligation d'attribution).
+
+Ces photos ont été **choisies sur la foi du titre du résultat de recherche** :
+l'environnement de développement n'a aucun accès réseau vers les hébergeurs
+d'images, elles n'ont donc pas pu être affichées avant d'être posées. Ouvrez
+`photos.html` pour les voir toutes sur une page et signaler celles à changer.
+
+Si une photo ne charge pas, la carte retombe automatiquement sur la vignette
+de sa catégorie, puis sur un aplat à l'emoji — jamais d'image cassée.
+
+Pour remplacer une photo : changez le nombre du champ `photo` par un autre
+identifiant Pexels (le nombre à la fin de l'URL d'une photo, par exemple
+`.../photo/pizza-margherita-20115306/` → `20115306`), ou déposez votre
+propre image dans `img/items/` et mettez le nom du fichier à la place.
+
+## Les vignettes de catégories
+
 Chaque cartouche d'article affiche une photo, en 4/3 au-dessus du nom
 (16/9 sur mobile, pour ne pas trop allonger la page).
 

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pavillon — contrôle des photos</title>
+<style>
+  body { font: 15px/1.4 system-ui, sans-serif; margin: 0; padding: 24px;
+         background: #111; color: #eee; }
+  h1 { font-size: 26px; margin: 0 0 6px; }
+  p.lead { color: #9aa; margin: 0 0 22px; max-width: 70ch; }
+  .stats { color: #6ec; font-variant-numeric: tabular-nums; margin-bottom: 22px; }
+  h2 { font-size: 17px; margin: 28px 0 10px; color: #8bd; text-transform: uppercase;
+       letter-spacing: .1em; border-bottom: 1px solid #333; padding-bottom: 6px; }
+  .g { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  figure { margin: 0; background: #1b1b1e; border-radius: 10px; overflow: hidden; }
+  img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; background: #222; }
+  figcaption { padding: 7px 9px; font-size: 13px; }
+  .id { color: #667; font-size: 11px; font-family: ui-monospace, monospace; }
+  .ko { outline: 2px solid #e5484d; }
+  .ko figcaption::after { content: ' ⚠ ne charge pas'; color: #e5484d; font-size: 11px; }
+</style>
+</head>
+<body>
+<h1>Contrôle des photos</h1>
+<p class="lead">
+  Une vignette par article, telle qu'elle apparaît sur le site. Les photos qui ne
+  chargent pas sont encadrées en rouge. Notez les numéros de celles qui ne vous
+  conviennent pas et renvoyez-les-moi : chaque remplacement est une ligne à changer
+  dans <code>data.js</code>.
+</p>
+<p class="stats" id="stats">Chargement…</p>
+<div id="out"></div>
+
+<script type="module">
+import { ITEMS, CATEGORIES } from './data.js';
+
+const pexels = id =>
+  `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop`;
+
+const out = document.getElementById('out');
+let total = 0, ko = 0;
+
+for (const c of CATEGORIES) {
+  const items = ITEMS.filter(i => i.cat === c.id);
+  if (!items.length) continue;
+  const h = document.createElement('h2');
+  h.textContent = `${c.emoji} ${c.label}`;
+  out.appendChild(h);
+  const g = document.createElement('div');
+  g.className = 'g';
+  for (const it of items) {
+    total++;
+    const f = document.createElement('figure');
+    const img = document.createElement('img');
+    img.loading = 'lazy';
+    img.src = typeof it.photo === 'number' ? pexels(it.photo)
+            : typeof it.photo === 'string' ? `img/items/${it.photo}.jpg`
+            : (c.photo ? `img/${c.photo}.jpg` : '');
+    img.addEventListener('error', () => { f.classList.add('ko'); ko++; maj(); });
+    const cap = document.createElement('figcaption');
+    cap.innerHTML = `${it.name}<br><span class="id">${it.id} · ${it.photo ?? '—'}</span>`;
+    f.append(img, cap);
+    g.appendChild(f);
+  }
+  out.appendChild(g);
+}
+
+const maj = () => {
+  document.getElementById('stats').textContent =
+    `${total} articles · ${ko} photo(s) en échec`;
+};
+maj();
+</script>
+</body>
+</html>
