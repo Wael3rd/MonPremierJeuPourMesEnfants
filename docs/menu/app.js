@@ -267,26 +267,99 @@ $('#bagFoot').addEventListener('click', e => {
   if (e.target.id === 'checkout') showDone();
 });
 
-/* ---------------------- récapitulatif de commande ------------------ */
-function recapText() {
-  const lines = [...cart].map(([k, q]) => {
+/* ------------------------- ticket de caisse ------------------------ */
+let ticket = null;      // { num, date } figés à l'ouverture du ticket
+
+function newTicket() {
+  const d = new Date();
+  return {
+    num: 'A' + String(100 + Math.floor(Math.random() * 900)),
+    date: d.toLocaleDateString('fr-FR'),
+    heure: d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+  };
+}
+
+/* les lignes du ticket, sous une forme utilisable par les deux rendus */
+function ticketLines() {
+  return [...cart].map(([k, q]) => {
     const { id, size } = parseKey(k);
     const unit = priceOf(id, size);
-    const label = `${q}× ${nameOf(id)}${size ? ` (${size})` : ''}`;
-    return `${label.padEnd(38, '.')} ${fmt(unit * q).padStart(8)} ${CURRENCY}`;
+    return { q, name: nameOf(id), size, unit, sum: unit * q };
   });
-  return [
-    'PAVILLON — COMMANDE',
-    '='.repeat(50),
-    ...lines,
-    '='.repeat(50),
-    `${String(totalCount() + ' article(s)').padEnd(38, '.')} ${fmt(totalMillimes()).padStart(8)} ${CURRENCY}`
-  ].join('\n');
+}
+
+function renderReceipt() {
+  const L = ticketLines(), n = totalCount(), t = totalMillimes();
+  $('#receipt').innerHTML = `
+    <div class="r-head">
+      <div class="r-name">PAVILLON</div>
+      <div class="r-tag">Café · Restaurant</div>
+    </div>
+    <div class="r-rule"></div>
+    <div class="r-meta">
+      <span>${ticket.date}</span><span>${ticket.heure}</span>
+    </div>
+    <div class="r-meta">
+      <span>Commande</span><span>N° ${ticket.num}</span>
+    </div>
+    <div class="r-rule"></div>
+    <div class="r-cols"><span>Qté</span><span>Désignation</span><span>Montant</span></div>
+    <div class="r-rule thin"></div>
+    <ul class="r-lines">
+      ${L.map(l => `
+        <li>
+          <span class="r-q">${l.q}</span>
+          <span class="r-d">${l.name}${l.size ? ` <i>${l.size}</i>` : ''}
+            ${l.q > 1 ? `<em>${fmt(l.unit)} × ${l.q}</em>` : ''}</span>
+          <span class="r-a">${fmt(l.sum)}</span>
+        </li>`).join('')}
+    </ul>
+    <div class="r-rule"></div>
+    <div class="r-sub"><span>Articles</span><span>${n}</span></div>
+    <div class="r-total"><span>TOTAL</span><span>${fmt(t)} <i>${CURRENCY}</i></span></div>
+    <div class="r-rule dash"></div>
+    <p class="r-foot">Merci de votre visite<br><span>Prix en dinars tunisiens</span></p>`;
+}
+
+/* Version texte, calibrée sur 32 colonnes comme un ticket thermique :
+   à copier dans un SMS ou WhatsApp sans que ça parte en vrille. */
+const W = 32;
+function row(left, right) {
+  const r = String(right);
+  const l = String(left).slice(0, Math.max(0, W - r.length - 1));
+  return l + ' '.repeat(Math.max(1, W - l.length - r.length)) + r;
+}
+const centre = s => ' '.repeat(Math.max(0, Math.floor((W - s.length) / 2))) + s;
+
+function recapText() {
+  const L = ticketLines(), out = [];
+  out.push(centre('P A V I L L O N'), centre('Café · Restaurant'), '='.repeat(W));
+  out.push(row(`${ticket.date} ${ticket.heure}`, `N° ${ticket.num}`), '-'.repeat(W));
+  L.forEach(l => {
+    const nom = l.name + (l.size ? ` (${l.size})` : '');
+    const montant = fmt(l.sum);
+    if (l.q > 1) {
+      out.push(`${l.q}  ${nom}`.slice(0, W));
+      out.push(row(`   ${fmt(l.unit)} × ${l.q}`, montant));
+    } else if (`1  ${nom}`.length + montant.length + 1 <= W) {
+      out.push(row(`1  ${nom}`, montant));
+    } else {
+      /* nom trop long : on ne le tronque pas au milieu, il prend sa ligne */
+      out.push(`1  ${nom}`.slice(0, W));
+      out.push(row('', montant));
+    }
+  });
+  out.push('-'.repeat(W));
+  out.push(row('Articles', totalCount()));
+  out.push(row('TOTAL', `${fmt(totalMillimes())} ${CURRENCY}`));
+  out.push('='.repeat(W), centre('Merci de votre visite'));
+  return out.join('\n');
 }
 
 function showDone() {
   if (!cart.size) return;
-  $('#doneRecap').textContent = recapText();
+  ticket = newTicket();
+  renderReceipt();
   $('#done').hidden = false;
 }
 function closeDone() { $('#done').hidden = true; }
