@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d0f14">
+<title>Pavillon — Prise de commande</title>
+<meta name="description" content="Outil de salle : saisie rapide des commandes, plusieurs tables en parallèle.">
+
+<link rel="preload" href="fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="service.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%BE%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ========================= Colonne gauche ======================== -->
+  <section class="pick">
+
+    <header class="bar">
+      <div class="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.2-4.2"/></svg>
+        <input id="q" type="search" placeholder="Chercher un article…  (tapez directement)"
+               autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done">
+        <button id="qClear" class="q-clear" hidden aria-label="Effacer">✕</button>
+      </div>
+      <div class="mult" id="mult" role="group" aria-label="Multiplicateur">
+        <button data-m="1" aria-pressed="true">×1</button>
+        <button data-m="2" aria-pressed="false">×2</button>
+        <button data-m="3" aria-pressed="false">×3</button>
+        <button data-m="4" aria-pressed="false">×4</button>
+      </div>
+      <a class="link-client" href="index.html" title="Ouvrir la carte client">Carte client ↗</a>
+    </header>
+
+    <nav class="cats" id="cats" aria-label="Catégories"></nav>
+
+    <div class="grid-wrap">
+      <div class="grid" id="grid"></div>
+      <p class="empty" id="empty" hidden>Aucun article ne correspond.</p>
+    </div>
+  </section>
+
+  <!-- ========================= Colonne droite ======================== -->
+  <aside class="order" id="order">
+
+    <header class="o-head">
+      <button class="tables-btn" id="tablesBtn">
+        <span class="tb-label">Table</span>
+        <span class="tb-num" id="tbNum">1</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="covers">
+        <button data-cov="-1" aria-label="Moins de couverts">−</button>
+        <span id="covers">2</span>
+        <svg class="cov-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v8m0 0a2 2 0 0 0 2-2V3m-2 8v10M17 3c-1.5 2-2 4-2 6a2 2 0 0 0 2 2v10"/></svg>
+        <button data-cov="1" aria-label="Plus de couverts">+</button>
+      </div>
+      <button class="o-close" id="oClose" aria-label="Fermer">✕</button>
+    </header>
+
+    <div class="o-lines" id="lines"></div>
+
+    <footer class="o-foot">
+      <div class="o-total">
+        <span>Total</span>
+        <strong id="total">0.000 <i>DT</i></strong>
+      </div>
+      <div class="o-actions">
+        <button class="btn btn-send" id="send">Envoyer</button>
+        <button class="btn btn-ghost" id="clear">Annuler</button>
+      </div>
+    </footer>
+  </aside>
+
+  <!-- barre compacte, écrans étroits -->
+  <button class="peek" id="peek" hidden>
+    <span id="peekCount">0 article</span>
+    <span id="peekTotal">0.000 DT</span>
+  </button>
+</div>
+
+<!-- ========================= Choix de la table ====================== -->
+<div class="modal" id="tables" hidden>
+  <div class="m-card">
+    <h2>Table</h2>
+    <div class="t-grid" id="tGrid"></div>
+    <button class="btn btn-ghost" id="tClose">Fermer</button>
+  </div>
+</div>
+
+<!-- ============================ Le bon ============================= -->
+<div class="modal" id="sent" hidden>
+  <div class="m-card">
+    <div class="bon" id="bon"></div>
+    <div class="m-actions">
+      <button class="btn btn-send" id="bonCopy">Copier le bon</button>
+      <button class="btn btn-ghost" id="bonClose">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="service.js"></script>
+</body>
+</html>

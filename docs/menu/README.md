@@ -3,6 +3,36 @@
 Site de commande construit à partir de la carte plastifiée du Pavillon
 (photo fournie). On choisit ses articles, le total se calcule tout seul.
 
+
+## Deux pages, deux usages
+
+| Page | Pour qui | Pensée pour |
+|---|---|---|
+| `index.html` | le client | donner envie : grandes photos, gros titres, défilement tranquille |
+| `service.html` | la salle | aller vite : tout à l'écran, aucune photo, recherche au clavier |
+
+### Le poste de salle (`service.html`)
+
+- **Recherche instantanée**, insensible aux accents et à la casse : `cesar`
+  trouve « Salade César », `margh` trouve « Margherita ». On tape n'importe où
+  sur la page, le focus part tout seul dans le champ.
+- <kbd>Entrée</kbd> ajoute le premier résultat et vide la recherche : on
+  enchaîne les articles sans lever les mains du clavier.
+- **Multiplicateur ×1 à ×4** avant de toucher un article, pour les tablées.
+  Il retombe à ×1 après chaque ajout, pour éviter les erreurs en cascade.
+- **Deux tailles de pizza = deux boutons** dans la même tuile : un seul geste.
+- **16 tables + Bar + Emporter, ouvertes en parallèle.** Chaque table garde sa
+  commande et son nombre de couverts ; les tables occupées portent une pastille
+  verte et leur total dans le sélecteur. Tout est conservé localement, un
+  rafraîchissement de la page ne perd rien.
+- **Bon de commande groupé par catégorie** (la cuisine lit plus vite), sur 32
+  colonnes comme une imprimante thermique, copiable en un geste.
+- Sur téléphone, la commande passe en panneau plein écran, appelé par la barre
+  verte du bas.
+
+L'interface est sombre : en service du soir, un écran blanc éblouit et se voit
+de loin en salle.
+
 ## Fonctionnement
 
 - **115 articles** répartis en **23 catégories**, du sandwich au milk-shake.
