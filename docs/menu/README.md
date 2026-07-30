@@ -45,14 +45,26 @@ Pour changer un prix : une seule ligne dans `data.js`.
 
 ## Les photos
 
-Les vignettes de catégories sont **découpées dans la photo de la carte**
-du restaurant, puis recadrées pour écarter au maximum les colonnes de prix
-imprimées par-dessus. Elles sont dans `img/`, en 320 × 320 (236 Ko au total
-pour les 16).
+Chaque cartouche d'article affiche une photo, en 4/3 au-dessus du nom
+(16/9 sur mobile, pour ne pas trop allonger la page).
 
-Les photos verticales (les verres : mojito, smoothie, jus) sont complétées
-sur les côtés plutôt que recadrées en carré — un recadrage centré coupait
-le haut et le bas du verre.
+L'image retenue suit cet ordre :
+
+1. le champ `photo` de l'article → `img/items/<nom>.jpg` ;
+2. sinon la photo de sa catégorie → `img/<nom>.jpg` ;
+3. sinon un aplat portant l'emoji de la catégorie.
+
+Les 16 photos de catégories sont **découpées dans la photo de la carte**
+du restaurant, recadrées pour écarter au maximum les colonnes de prix
+imprimées par-dessus. Elles font 320 × 320 (245 Ko au total).
+
+Les photos plus hautes que larges (les verres : mojito, smoothie, jus, et
+le tacos) sont complétées sur les côtés par **la photo elle-même, agrandie
+et floutée**. Un recadrage carré décapitait le verre, et un aplat uni
+laissait deux bandes de couleur bien visibles une fois la carte affichée
+en 4/3.
+
+Pour donner une photo propre à un article précis, voir `img/items/README.md`.
 
 Cinq catégories gardent leur emoji, faute de photo exploitable :
 

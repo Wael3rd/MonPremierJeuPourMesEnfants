@@ -53,10 +53,29 @@ function setQty(k, q) {
 const addOne = k => setQty(k, (cart.get(k) || 0) + 1);
 
 /* ============================== rendu ============================== */
+const catById = new Map(CATEGORIES.map(c => [c.id, c]));
+
 /* vignette de la catégorie : photo découpée dans la carte, sinon emoji */
 const thumb = (c, cls) => c.photo
   ? `<img class="${cls}" src="img/${c.photo}.jpg" alt="" width="320" height="320" loading="lazy" decoding="async">`
   : `<span class="${cls} ${cls}-emoji">${c.emoji}</span>`;
+
+/* Photo d'un article. `photo` sur l'article l'emporte ; à défaut on
+   retombe sur celle de sa catégorie. Renvoie null s'il n'y a rien : la
+   carte affiche alors un aplat avec l'emoji, plutôt qu'un trou. */
+function photoFor(it) {
+  if (it.photo) return `img/items/${it.photo}.jpg`;
+  const c = catById.get(it.cat);
+  return c && c.photo ? `img/${c.photo}.jpg` : null;
+}
+
+function mediaHTML(it) {
+  const src = photoFor(it);
+  const c = catById.get(it.cat) || {};
+  return src
+    ? `<img class="card-media" src="${src}" alt="${it.name}" width="320" height="320" loading="lazy" decoding="async">`
+    : `<div class="card-media card-media-ph" aria-hidden="true">${c.emoji || '🍽️'}</div>`;
+}
 
 function buildCats() {
   const wrap = $('#catsScroll');
@@ -94,13 +113,19 @@ function cardHTML(it) {
 
   return `
   <article class="card${qty > 0 ? ' in-bag' : ''}" data-card="${it.id}">
-    ${it.star ? '<span class="card-star">Spécial</span>' : ''}
-    <h3>${it.name}</h3>
-    ${it.desc ? `<p class="desc">${it.desc}</p>` : ''}
-    ${it.note ? `<p class="note">${it.note}</p>` : ''}
-    ${sizesHTML}
-    <div class="price">${fmt(price)} <small>${CURRENCY}</small></div>
-    <div class="add-row">${control}</div>
+    <div class="card-media-wrap">
+      ${mediaHTML(it)}
+      ${it.star ? '<span class="card-star">Spécial</span>' : ''}
+      ${qty > 0 ? `<span class="card-badge">${qty}</span>` : ''}
+    </div>
+    <div class="card-body">
+      <h3>${it.name}</h3>
+      ${it.desc ? `<p class="desc">${it.desc}</p>` : ''}
+      ${it.note ? `<p class="note">${it.note}</p>` : ''}
+      ${sizesHTML}
+      <div class="price">${fmt(price)} <small>${CURRENCY}</small></div>
+      <div class="add-row">${control}</div>
+    </div>
   </article>`;
 }
 
