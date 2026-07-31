@@ -227,8 +227,8 @@ button { background: none; border: 0; cursor: pointer; }
 .t-szs { display: grid; grid-template-columns: 1fr; gap: 6px; }
 .tile-sz .t-szs { grid-template-columns: 1fr 1fr; }
 .sz {
-  display: flex; align-items: center; gap: 6px;
-  padding: 5px 6px 5px 8px; border-radius: 9px;
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 5px 5px 8px; border-radius: 9px;
   background: var(--tile-2); border: 1px solid var(--line);
   min-width: 0;
 }
@@ -250,7 +250,7 @@ button { background: none; border: 0; cursor: pointer; }
   border-radius: 8px; flex: 0 0 auto;
 }
 .stepper.xs button {
-  width: 30px; height: 30px; border-radius: 7px;
+  width: 28px; height: 30px; border-radius: 7px;
   font-size: 18px; line-height: 1; color: var(--text);
 }
 .stepper.xs button:hover:not(:disabled) { background: var(--tile-2); }
@@ -424,7 +424,9 @@ button { background: none; border: 0; cursor: pointer; }
     background: var(--tile); color: var(--dim); font-size: 15px;
   }
   .grid-wrap { padding-bottom: 84px; }
-  .grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  /* même largeur mini que sur grand écran : en dessous, le compteur
+     sort du cadre du prix */
+  .grid { grid-template-columns: repeat(auto-fill, minmax(178px, 1fr)); }
 }
 
 @media (max-width: 560px) {
