@@ -378,6 +378,10 @@ button { background: none; border: 0; cursor: pointer; }
   background: var(--panel); border: 1px solid var(--line);
   border-radius: 18px; padding: 22px;
 }
+/* le bon est un papier : il ne prend pas le fond de la modale */
+#sent .m-card {
+  width: min(430px, 100%); background: none; border: 0; padding: 4px;
+}
 .m-card h2 { font-size: 22px; margin-bottom: 16px; letter-spacing: -.02em; }
 .m-actions { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-top: 18px; }
 
@@ -400,14 +404,101 @@ button { background: none; border: 0; cursor: pointer; }
 .t-grid button small { display: block; font-size: 11px; font-weight: 600; color: var(--dim); }
 .t-grid button[aria-current='true'] small { color: rgba(255, 255, 255, .8); }
 
-/* le bon de commande */
+/* ===================== Le bon de commande =========================
+   Même papier et mêmes règles typographiques que la facture client, à
+   quoi s'ajoutent la table, les couverts et le regroupement par poste. */
 .bon {
-  font-family: var(--mono); font-size: 14px; line-height: 1.6;
-  background: #fbfaf6; color: #14161a;
-  border-radius: 12px; padding: 20px;
-  white-space: pre-wrap; word-break: break-word;
-  max-height: 58dvh; overflow-y: auto;
+  --paper: #fbfaf6;
+  --encre: #14161a;
+  --pale:  #6b6f77;
+  --tooth-h: 11px;
+  --tooth-w: 18px;
+
+  background: var(--paper); color: var(--encre);
+  font-family: var(--mono);
+  font-size: 14px; line-height: 1.5; letter-spacing: -.01em;
+  padding: 28px 22px;
+  text-align: left;
+  /* pas de hauteur maxi sur le papier : c'est la feuille entière qui
+     défile dans la modale, sinon le TOTAL se retrouve coupé sous le bord
+     du ticket sur un écran de téléphone */
+  filter: drop-shadow(0 18px 34px rgba(0, 0, 0, .5));
+
+  --mask:
+    linear-gradient(#000 0 0) 50% / 100% calc(100% - 2 * var(--tooth-h)) no-repeat,
+    conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg)
+      50% 0 / var(--tooth-w) var(--tooth-h) repeat-x,
+    conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg)
+      50% 100% / var(--tooth-w) var(--tooth-h) repeat-x;
+  -webkit-mask: var(--mask);
+  mask: var(--mask);
 }
+
+.bon .r-head { text-align: center; margin-bottom: 14px; }
+.bon .r-name {
+  font-family: var(--font); font-weight: 800;
+  font-size: 28px; letter-spacing: .22em; text-indent: .22em; line-height: 1.1;
+}
+.bon .r-tag {
+  font-size: 12px; color: var(--pale); letter-spacing: .12em;
+  text-transform: uppercase; margin-top: 4px;
+}
+
+.bon .r-rule { border-top: 1px solid var(--encre); margin: 11px 0; }
+.bon .r-rule.dash { border-top-style: dashed; border-color: rgba(0, 0, 0, .35); }
+
+.bon .r-table {
+  display: flex; align-items: baseline; justify-content: space-between;
+  font-family: var(--font);
+}
+.bon .r-t-num { font-size: 24px; font-weight: 800; letter-spacing: -.03em; }
+.bon .r-t-cov { font-size: 14px; color: var(--pale); }
+.bon .r-meta {
+  display: flex; justify-content: space-between;
+  font-size: 12.5px; color: var(--pale); margin-top: 3px;
+}
+
+.bon .r-cols {
+  display: grid; grid-template-columns: 30px 1fr auto; gap: 10px;
+  font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--pale);
+}
+.bon .r-cols span:last-child { text-align: right; }
+
+.bon .r-grp {
+  font-size: 11.5px; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--encre);
+  background: rgba(0, 0, 0, .07);
+  padding: 3px 8px; border-radius: 4px;
+  margin: 12px 0 2px;
+}
+
+.bon .r-lines { list-style: none; }
+.bon .r-lines li {
+  display: grid; grid-template-columns: 30px 1fr auto; gap: 10px;
+  padding: 7px 0; align-items: baseline;
+}
+.bon .r-lines li + li { border-top: 1px dotted rgba(0, 0, 0, .18); }
+.bon .r-q { font-weight: 700; font-variant-numeric: tabular-nums; }
+.bon .r-d {
+  font-family: var(--font); font-size: 15px; font-weight: 500;
+  letter-spacing: -.01em; line-height: 1.25; min-width: 0;
+}
+.bon .r-d i {
+  font-style: normal; font-size: 11px; font-weight: 700;
+  border: 1px solid rgba(0, 0, 0, .3); border-radius: 4px;
+  padding: 0 4px; margin-left: 4px; vertical-align: 1px;
+}
+.bon .r-d em { display: block; font-style: normal; font-size: 12px; color: var(--pale); font-family: var(--mono); }
+.bon .r-a { font-variant-numeric: tabular-nums; font-weight: 700; text-align: right; white-space: nowrap; }
+
+.bon .r-sub { display: flex; justify-content: space-between; font-size: 13px; color: var(--pale); }
+.bon .r-total {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-top: 9px; font-family: var(--font); font-weight: 800;
+  font-size: 28px; letter-spacing: -.03em; font-variant-numeric: tabular-nums;
+}
+.bon .r-total i { font-style: normal; font-size: .55em; }
+.bon .r-foot { text-align: center; margin-top: 13px; font-size: 12.5px; color: var(--pale); }
 
 /* ============================ Responsive =========================== */
 @media (max-width: 900px) {

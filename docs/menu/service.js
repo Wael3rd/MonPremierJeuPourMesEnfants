@@ -389,9 +389,58 @@ function bonText() {
   return out.join('\n');
 }
 
+/* Le bon reprend exactement la présentation de la facture client :
+   même papier, mêmes colonnes, mêmes dents de scie. Il y ajoute ce qui
+   n'a de sens qu'en salle — le numéro de table, les couverts, et le
+   regroupement par poste de préparation. */
+function bonHTML() {
+  const L = lignes(), o = order();
+  const d = new Date();
+  const groupes = USED.map(c => ({
+    c, ks: Object.keys(L).filter(k => (byId.get(parseKey(k).id) || {}).cat === c.id)
+  })).filter(g => g.ks.length);
+
+  return `
+    <div class="r-head">
+      <div class="r-name">PAVILLON</div>
+      <div class="r-tag">Bon de commande</div>
+    </div>
+    <div class="r-rule"></div>
+    <div class="r-table">
+      <span class="r-t-num">Table ${state.table}</span>
+      <span class="r-t-cov">${o.covers} couvert${o.covers > 1 ? 's' : ''}</span>
+    </div>
+    <div class="r-meta">
+      <span>${d.toLocaleDateString('fr-FR')}</span>
+      <span>${d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</span>
+    </div>
+    <div class="r-rule"></div>
+    <div class="r-cols"><span>Qté</span><span>Désignation</span><span>Montant</span></div>
+    ${groupes.map(g => `
+      <div class="r-grp">${g.c.label}</div>
+      <ul class="r-lines">
+        ${g.ks.map(k => {
+          const { id, size } = parseKey(k);
+          const unit = priceOf(id, size), q = L[k];
+          return `
+          <li>
+            <span class="r-q">${q}</span>
+            <span class="r-d">${nameOf(id)}${size ? ` <i>${size}</i>` : ''}
+              ${q > 1 ? `<em>${fmt(unit)} × ${q}</em>` : ''}</span>
+            <span class="r-a">${fmt(unit * q)}</span>
+          </li>`;
+        }).join('')}
+      </ul>`).join('')}
+    <div class="r-rule"></div>
+    <div class="r-sub"><span>Articles</span><span>${countOf()}</span></div>
+    <div class="r-total"><span>TOTAL</span><span>${fmt(totalOf())} <i>${CURRENCY}</i></span></div>
+    <div class="r-rule dash"></div>
+    <p class="r-foot">Bon à transmettre en cuisine</p>`;
+}
+
 $('#send').addEventListener('click', () => {
   if (!countOf()) return;
-  $('#bon').textContent = bonText();
+  $('#bon').innerHTML = bonHTML();
   $('#sent').hidden = false;
 });
 $('#bonClose').addEventListener('click', () => ($('#sent').hidden = true));
