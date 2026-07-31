@@ -32,7 +32,7 @@ const HAY = new Map(ITEMS.map(i => [i.id, norm(`${i.name} ${(catById.get(i.cat) 
 /* ------------------------------- état ------------------------------ */
 const state = {
   table: '1',
-  cat: 'all',
+  cat: '',            // section actuellement en haut de l'écran (pas un filtre)
   q: '',
   mult: 1,
   orders: {}          // table -> { covers, lignes: { clé: qté } }
@@ -87,12 +87,16 @@ function setQty(k, q) {
 }
 
 /* ============================== rendu ============================== */
+/* Une teinte par section. L'angle d'or écarte au maximum les teintes
+   voisines : deux sections qui se suivent ne peuvent pas se ressembler,
+   ce qui ne serait pas le cas d'un simple partage du cercle en 23. */
+const USED = CATEGORIES.filter(c => ITEMS.some(i => i.cat === c.id));
+const HUE = new Map(USED.map((c, i) => [c.id, Math.round((i * 137.508) % 360)]));
+
 function paintCats() {
-  const wrap = $('#cats');
-  const used = CATEGORIES.filter(c => ITEMS.some(i => i.cat === c.id));
-  wrap.innerHTML =
-    `<button data-cat="all" aria-pressed="${state.cat === 'all'}">Tout</button>` +
-    used.map(c => `<button data-cat="${c.id}" aria-pressed="${state.cat === c.id}">${c.emoji} ${c.label}</button>`).join('');
+  $('#cats').innerHTML = USED.map(c =>
+    `<button data-cat="${c.id}" aria-pressed="${c.id === state.cat}"
+             style="--h:${HUE.get(c.id)}">${c.emoji} ${c.label}</button>`).join('');
 }
 
 function visibleItems() {
@@ -101,7 +105,7 @@ function visibleItems() {
     const mots = q.split(/\s+/);
     return ITEMS.filter(i => { const h = HAY.get(i.id); return mots.every(m => h.includes(m)); });
   }
-  return state.cat === 'all' ? ITEMS : ITEMS.filter(i => i.cat === state.cat);
+  return ITEMS;      // hors recherche, la grille est rendue par sections
 }
 
 function tileHTML(it) {
@@ -138,9 +142,29 @@ function tileHTML(it) {
 }
 
 function paintGrid() {
-  const items = visibleItems();
-  $('#grid').innerHTML = items.map(tileHTML).join('');
-  $('#empty').hidden = items.length > 0;
+  const wrap = $('#grid');
+  const q = state.q.trim();
+
+  if (q) {                                   // en recherche : liste à plat
+    const items = visibleItems();
+    wrap.innerHTML = `<div class="grid">${items.map(tileHTML).join('')}</div>`;
+    $('#empty').hidden = items.length > 0;
+    return;
+  }
+
+  $('#empty').hidden = true;
+  wrap.innerHTML = USED.map(c => {
+    const items = ITEMS.filter(i => i.cat === c.id);
+    return `
+    <section class="sec" data-sec="${c.id}" style="--h:${HUE.get(c.id)}">
+      <header class="sec-head">
+        <span class="sec-dot"></span>
+        <h2>${c.emoji} ${c.label}</h2>
+        <span class="sec-n">${items.length}</span>
+      </header>
+      <div class="grid">${items.map(tileHTML).join('')}</div>
+    </section>`;
+  }).join('') + '<div class="sec-fin" aria-hidden="true"></div>';
 }
 
 function paintOrder() {
@@ -201,14 +225,67 @@ $('#lines').addEventListener('click', e => {
   setQty(k, b.dataset.q === 'inc' ? cur + 1 : cur - 1);
 });
 
+const wrapEl = () => $('.grid-wrap');
+
 $('#cats').addEventListener('click', e => {
   const b = e.target.closest('[data-cat]');
   if (!b) return;
-  state.cat = b.dataset.cat;
-  state.q = ''; $('#q').value = ''; $('#qClear').hidden = true;
-  paintCats(); paintGrid();
-  $('.grid-wrap').scrollTop = 0;
+  if (state.q) {                       // on sort d'abord de la recherche
+    state.q = ''; $('#q').value = ''; $('#qClear').hidden = true; paintGrid();
+  }
+  gotoSection(b.dataset.cat);
 });
+
+/* --------- navigation par section + suivi du défilement ------------ */
+/* Deux identifiants d'animation distincts : l'écouteur de défilement
+   annulait la boucle qui surveille la fin du défilement programmé, et
+   spySuppress restait vrai indéfiniment — le suivi ne repartait jamais. */
+let spySuppress = false, spyRAF = 0, settleRAF = 0;
+
+function setActive(id, { snap = true } = {}) {
+  if (id === state.cat) return;
+  state.cat = id;
+  $$('#cats button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.cat === id)));
+  if (!snap) return;
+  const pill = $(`#cats button[data-cat="${id}"]`);
+  /* la pastille active vient se caler à gauche du rail */
+  if (pill) $('#cats').scrollTo({ left: Math.max(0, pill.offsetLeft - 12), behavior: 'smooth' });
+}
+
+function gotoSection(id) {
+  const sec = $(`.sec[data-sec="${id}"]`);
+  if (!sec) return;
+  setActive(id);
+  const w = wrapEl();
+  spySuppress = true;
+  const delta = sec.getBoundingClientRect().top - w.getBoundingClientRect().top;
+  w.scrollTo({ top: Math.max(0, w.scrollTop + delta - 6), behavior: 'smooth' });
+
+  /* on rend la main au suivi seulement quand le défilement s'est posé :
+     un délai fixe le couperait en route sur une longue course */
+  cancelAnimationFrame(settleRAF);
+  const t0 = performance.now();
+  let last = -1, stable = 0;
+  const check = () => {
+    const cur = Math.round(w.scrollTop);
+    stable = cur === last ? stable + 1 : 0;
+    last = cur;
+    if (stable >= 3 || performance.now() - t0 > 2500) { spySuppress = false; return; }
+    settleRAF = requestAnimationFrame(check);
+  };
+  settleRAF = requestAnimationFrame(check);
+}
+
+/* la section en haut de l'écran pilote la pastille active */
+function spy() {
+  if (spySuppress || state.q) return;
+  const w = wrapEl(), secs = $$('.sec', w);
+  if (!secs.length) return;
+  const haut = w.getBoundingClientRect().top;
+  let cur = secs[0];
+  for (const s of secs) if (s.getBoundingClientRect().top - haut <= 30) cur = s;
+  setActive(cur.dataset.sec);
+}
 
 $('#mult').addEventListener('click', e => {
   const b = e.target.closest('[data-m]');
@@ -223,7 +300,7 @@ qInput.addEventListener('input', () => {
   state.q = qInput.value;
   $('#qClear').hidden = !state.q;
   paintGrid();
-  $('.grid-wrap').scrollTop = 0;
+  wrapEl().scrollTop = 0;
 });
 $('#qClear').addEventListener('click', () => {
   state.q = ''; qInput.value = ''; $('#qClear').hidden = true; paintGrid(); qInput.focus();
@@ -348,7 +425,12 @@ addEventListener('resize', paintOrder);
 
 /* ============================= démarrage =========================== */
 load();
+state.cat = USED.length ? USED[0].id : '';
 paintCats();
+wrapEl().addEventListener('scroll', () => {
+  cancelAnimationFrame(spyRAF);
+  spyRAF = requestAnimationFrame(spy);
+}, { passive: true });
 paintMult();
 paint();
 if (matchMedia('(min-width: 901px)').matches) qInput.focus();

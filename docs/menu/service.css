@@ -126,18 +126,92 @@ button { background: none; border: 0; cursor: pointer; }
 .cats::-webkit-scrollbar { display: none; }
 .cats button {
   flex: 0 0 auto; padding: 9px 15px; border-radius: 999px;
-  background: var(--tile); border: 1px solid var(--line);
-  font-size: 14.5px; font-weight: 600; color: var(--dim); white-space: nowrap;
+  background: hsl(var(--h, 220) 22% 15%);
+  border: 1px solid hsl(var(--h, 220) 30% 24%);
+  font-size: 14.5px; font-weight: 600; white-space: nowrap;
+  color: hsl(var(--h, 220) 45% 72%);
+  transition: background .18s, color .18s, border-color .18s;
 }
-.cats button[aria-pressed='true'] { background: var(--text); color: var(--bg); border-color: transparent; }
+.cats button:hover { background: hsl(var(--h, 220) 26% 20%); }
+.cats button[aria-pressed='true'] {
+  background: hsl(var(--h, 220) 62% 55%); color: #0b0d12;
+  border-color: transparent; font-weight: 700;
+}
 
 /* grille d'articles */
-.grid-wrap { overflow-y: auto; min-height: 0; padding: 12px; overscroll-behavior: contain; }
+.grid-wrap {
+  overflow-y: auto; min-height: 0; padding: 12px;
+  overscroll-behavior: contain;
+  position: relative;          /* repère pour offsetTop des sections */
+  scroll-behavior: smooth;
+}
+/* Le conteneur racine empile simplement les sections. Il ne doit surtout
+   pas être lui-même une grille multi-colonnes, sinon les sections — et la
+   réserve de fin — sont réparties en cellules côte à côte. */
+.list { display: block; }
 .grid {
   display: grid; gap: 8px;
   grid-template-columns: repeat(auto-fill, minmax(158px, 1fr));
   align-content: start;
 }
+
+/* Chaque section porte sa propre teinte : on voit d'un coup d'œil qu'on
+   a changé de famille en faisant défiler. --h est posé en ligne par le
+   script, selon l'angle d'or. */
+.sec {
+  --sec-bg:   hsl(var(--h) 24% 11%);
+  --sec-head: hsl(var(--h) 30% 14%);
+  --sec-ac:   hsl(var(--h) 65% 66%);
+  background: var(--sec-bg);
+  border: 1px solid hsl(var(--h) 25% 20%);
+  border-radius: 14px;
+  padding: 0 10px 10px;
+  margin-bottom: 12px;
+  scroll-margin-top: 6px;
+}
+.sec:last-child { margin-bottom: 0; }
+
+/* Sans cette réserve, les dernières sections butent sur la fin du
+   défilement et ne peuvent jamais atteindre le haut de l'écran : la
+   pastille cliquée ne correspondrait alors plus à ce qu'on voit. */
+.sec-fin { height: 55vh; }
+
+.sec-head {
+  position: sticky; top: 0; z-index: 3;
+  display: flex; align-items: center; gap: 9px;
+  margin: 0 -10px 10px; padding: 11px 14px;
+  background: var(--sec-head);
+  border-bottom: 1px solid hsl(var(--h) 28% 22%);
+  border-radius: 13px 13px 0 0;
+}
+.sec-dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--sec-ac); flex: 0 0 auto;
+  box-shadow: 0 0 0 3px hsl(var(--h) 60% 55% / .18);
+}
+.sec-head h2 {
+  font-size: 14px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--sec-ac);
+}
+.sec-n {
+  margin-left: auto; font-family: var(--mono); font-size: 12px;
+  color: hsl(var(--h) 20% 62%);
+  background: hsl(var(--h) 25% 19%); border-radius: 999px; padding: 2px 9px;
+}
+
+/* les tuiles se détachent du fond coloré de leur section */
+/* dans une section, le nom de la catégorie est déjà dans l'en-tête :
+   on le retire de la tuile et on gagne de la densité. Il reste affiché
+   en résultat de recherche, où il situe l'article. */
+.sec .t-cat { display: none; }
+.sec .tile { background: hsl(var(--h) 18% 17%); border-color: hsl(var(--h) 20% 24%); min-height: 68px; }
+.sec .tile:hover { background: hsl(var(--h) 20% 21%); border-color: hsl(var(--h) 30% 34%); }
+.sec .tile.on { background: hsl(var(--h) 40% 22%); border-color: var(--sec-ac); }
+.sec .t-szs button { background: hsl(var(--h) 18% 22%); border-color: hsl(var(--h) 20% 28%); }
+.sec .t-szs button:hover { background: hsl(var(--h) 22% 27%); }
+.sec .t-szs button.on { background: var(--sec-ac); color: #0b0d12; border-color: transparent; }
+.sec .t-szs button.on b { color: rgba(0, 0, 0, .55); }
+.sec .t-qty { background: var(--sec-ac); color: #0b0d12; }
 .empty { color: var(--dim); text-align: center; padding: 50px 10px; font-size: 17px; }
 
 .tile {
