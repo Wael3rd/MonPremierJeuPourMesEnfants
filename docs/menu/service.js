@@ -34,7 +34,6 @@ const state = {
   table: '1',
   cat: '',            // section actuellement en haut de l'écran (pas un filtre)
   q: '',
-  mult: 1,
   orders: {}          // table -> { covers, lignes: { clé: qté } }
 };
 
@@ -73,11 +72,10 @@ const totalOf = t => Object.entries(order(t).lignes)
 const countOf = t => Object.values(order(t).lignes).reduce((a, b) => a + b, 0);
 
 /* ------------------------------ actions ---------------------------- */
-function add(id, size, n = state.mult) {
+function add(id, size, n = 1) {
   const k = key(id, size);
   const L = lignes();
   L[k] = (L[k] || 0) + n;
-  state.mult = 1;                    // le multiplicateur ne vaut que pour un ajout
   save(); paint();
 }
 function setQty(k, q) {
@@ -108,25 +106,41 @@ function visibleItems() {
   return ITEMS;      // hors recherche, la grille est rendue par sections
 }
 
+/* ordre d'affichage des tailles : le médium à gauche, le large à droite */
+const RANG = { M: 0, L: 1 };
+const parTaille = (a, b) => (RANG[a.label] ?? 9) - (RANG[b.label] ?? 9);
+
 function tileHTML(it) {
   const L = lignes();
   const cat = (catById.get(it.cat) || {}).label || '';
+
+  /* Article à plusieurs tailles : chaque taille est une ligne autonome,
+     avec son prix et son compteur. La tuile n'est pas cliquable — seuls
+     les − et + agissent, pour qu'on puisse corriger sans risque. */
   if (it.sizes) {
     const total = it.sizes.reduce((s, sz) => s + (L[key(it.id, sz.label)] || 0), 0);
     return `
-    <div class="tile${total ? ' on' : ''}" data-tile="${it.id}">
-      <div>
-        <div class="t-name">${it.name}</div>
-        <div class="t-cat">${cat}</div>
-      </div>
+    <div class="tile tile-sz${total ? ' on' : ''}" data-tile="${it.id}">
+      <div class="t-name">${it.name}</div>
+      <div class="t-cat">${cat}</div>
       <div class="t-szs">
-        ${it.sizes.map(sz => {
-          const q = L[key(it.id, sz.label)] || 0;
-          return `<button class="${q ? 'on' : ''}" data-add="${it.id}" data-size="${sz.label}"
-                    aria-label="${it.name} ${sz.label}"><b>${sz.label}</b>${fmt(sz.price)}</button>`;
+        ${[...it.sizes].sort(parTaille).map(sz => {
+          const k = key(it.id, sz.label);
+          const q = L[k] || 0;
+          return `
+          <div class="sz${q ? ' on' : ''}">
+            <span class="sz-lab">${sz.label}</span>
+            <span class="sz-price">${fmt(sz.price)}</span>
+            <div class="stepper xs">
+              <button data-q="dec" data-key="${k}" ${q ? '' : 'disabled'}
+                      aria-label="Retirer ${it.name} ${sz.label}">−</button>
+              <span class="n">${q}</span>
+              <button data-q="inc" data-key="${k}"
+                      aria-label="Ajouter ${it.name} ${sz.label}">+</button>
+            </div>
+          </div>`;
         }).join('')}
       </div>
-      ${total ? `<span class="t-qty">${total}</span>` : ''}
     </div>`;
   }
   const q = L[it.id] || 0;
@@ -202,17 +216,16 @@ function paintOrder() {
   $('#peekTotal').textContent = `${fmt(totalOf())} ${CURRENCY}`;
 }
 
-function paintMult() {
-  $$('#mult button').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.m === state.mult)));
-}
-
-/* paintMult est inclus : le multiplicateur retombe à 1 après chaque ajout,
-   l'affichage doit suivre, sinon le serveur croit ajouter ×3 alors que
-   l'état est déjà revenu à ×1. */
-function paint() { paintGrid(); paintOrder(); paintMult(); }
+function paint() { paintGrid(); paintOrder(); }
 
 /* =========================== interactions ========================== */
 $('#grid').addEventListener('click', e => {
+  const step = e.target.closest('[data-q]');
+  if (step) {                       // compteur d'une taille
+    const k = step.dataset.key, cur = lignes()[k] || 0;
+    setQty(k, step.dataset.q === 'inc' ? cur + 1 : cur - 1);
+    return;
+  }
   const b = e.target.closest('[data-add]');
   if (!b) return;
   add(b.dataset.add, b.dataset.size || null);
@@ -287,12 +300,6 @@ function spy() {
   setActive(cur.dataset.sec);
 }
 
-$('#mult').addEventListener('click', e => {
-  const b = e.target.closest('[data-m]');
-  if (!b) return;
-  state.mult = +b.dataset.m;
-  paintMult();
-});
 
 /* recherche */
 const qInput = $('#q');
@@ -431,6 +438,5 @@ wrapEl().addEventListener('scroll', () => {
   cancelAnimationFrame(spyRAF);
   spyRAF = requestAnimationFrame(spy);
 }, { passive: true });
-paintMult();
 paint();
 if (matchMedia('(min-width: 901px)').matches) qInput.focus();

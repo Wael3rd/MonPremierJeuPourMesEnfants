@@ -85,7 +85,7 @@ button { background: none; border: 0; cursor: pointer; }
   pointer-events: none;
 }
 .search input {
-  width: 100%; height: 44px;
+  width: 100%; height: 46px;
   background: var(--tile); border: 1px solid var(--line);
   border-radius: var(--r); padding: 0 40px 0 40px;
   font-size: 17px; outline: none;
@@ -98,24 +98,6 @@ button { background: none; border: 0; cursor: pointer; }
   border-radius: 50%; color: var(--dim); font-size: 14px;
 }
 .q-clear:hover { background: var(--tile-2); color: var(--text); }
-
-.mult { display: flex; gap: 4px; flex: 0 0 auto; }
-.mult button {
-  min-width: 46px; height: 44px; border-radius: var(--r);
-  background: var(--tile); border: 1px solid var(--line);
-  font-size: 15px; font-weight: 600; color: var(--dim);
-  font-variant-numeric: tabular-nums;
-}
-.mult button[aria-pressed='true'] {
-  background: var(--accent); border-color: transparent; color: #fff;
-}
-
-.link-client {
-  flex: 0 0 auto; color: var(--dim); text-decoration: none;
-  font-size: 13px; padding: 8px 10px; border-radius: 8px;
-  white-space: nowrap;
-}
-.link-client:hover { color: var(--text); background: var(--tile); }
 
 /* pastilles de catégories */
 .cats {
@@ -207,10 +189,11 @@ button { background: none; border: 0; cursor: pointer; }
 .sec .tile { background: hsl(var(--h) 18% 17%); border-color: hsl(var(--h) 20% 24%); min-height: 68px; }
 .sec .tile:hover { background: hsl(var(--h) 20% 21%); border-color: hsl(var(--h) 30% 34%); }
 .sec .tile.on { background: hsl(var(--h) 40% 22%); border-color: var(--sec-ac); }
-.sec .t-szs button { background: hsl(var(--h) 18% 22%); border-color: hsl(var(--h) 20% 28%); }
-.sec .t-szs button:hover { background: hsl(var(--h) 22% 27%); }
-.sec .t-szs button.on { background: var(--sec-ac); color: #0b0d12; border-color: transparent; }
-.sec .t-szs button.on b { color: rgba(0, 0, 0, .55); }
+.sec .sz { background: hsl(var(--h) 18% 22%); border-color: hsl(var(--h) 20% 28%); }
+.sec .sz.on { background: hsl(var(--h) 40% 26%); border-color: var(--sec-ac); }
+.sec .sz.on .sz-lab { color: var(--sec-ac); }
+.sec .stepper.xs { background: hsl(var(--h) 20% 13%); border-color: hsl(var(--h) 20% 26%); }
+.sec .stepper.xs button:hover:not(:disabled) { background: hsl(var(--h) 22% 24%); }
 .sec .t-qty { background: var(--sec-ac); color: #0b0d12; }
 .empty { color: var(--dim); text-align: center; padding: 50px 10px; font-size: 17px; }
 
@@ -235,19 +218,46 @@ button { background: none; border: 0; cursor: pointer; }
   font-family: var(--mono); font-size: 15px; font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
-/* deux tailles : deux boutons de prix dans la même tuile */
-.t-szs { display: flex; gap: 5px; }
-.t-szs button {
-  flex: 1; padding: 7px 4px; border-radius: 8px;
+/* Deux tailles = deux lignes autonomes, médium à gauche, large à droite.
+   La tuile occupe deux colonnes de la grille : il faut la place pour deux
+   prix et deux compteurs côte à côte. */
+.tile-sz { grid-column: span 2; cursor: default; }
+.tile-sz:active { transform: none; }
+
+.t-szs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.sz {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 6px 5px 8px; border-radius: 9px;
   background: var(--tile-2); border: 1px solid var(--line);
-  font-family: var(--mono); font-size: 12.5px; font-weight: 700;
-  font-variant-numeric: tabular-nums; position: relative;
+  min-width: 0;
 }
-.t-szs button:hover { background: #2c3343; border-color: var(--line-2); }
-.t-szs button:active { transform: scale(.95); }
-.t-szs button b { color: var(--dim); font-weight: 700; margin-right: 3px; }
-.t-szs button.on { background: var(--accent); border-color: transparent; }
-.t-szs button.on b { color: rgba(255, 255, 255, .75); }
+.sz.on { border-color: var(--accent); background: hsl(215 45% 20%); }
+.sz-lab {
+  font-size: 12px; font-weight: 800; color: var(--dim);
+  width: 14px; flex: 0 0 auto;
+}
+.sz.on .sz-lab { color: var(--text); }
+.sz-price {
+  font-family: var(--mono); font-size: 13px; font-weight: 700;
+  font-variant-numeric: tabular-nums; margin-right: auto;
+}
+
+/* compteur compact, à droite du prix */
+.stepper.xs {
+  display: flex; align-items: center; gap: 0;
+  background: var(--bg); border: 1px solid var(--line);
+  border-radius: 8px; flex: 0 0 auto;
+}
+.stepper.xs button {
+  width: 30px; height: 30px; border-radius: 7px;
+  font-size: 18px; line-height: 1; color: var(--text);
+}
+.stepper.xs button:hover:not(:disabled) { background: var(--tile-2); }
+.stepper.xs button:disabled { color: hsl(220 10% 35%); cursor: default; }
+.stepper.xs .n {
+  min-width: 20px; text-align: center;
+  font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums;
+}
 
 .t-qty {
   position: absolute; top: -7px; right: -7px;
@@ -412,13 +422,12 @@ button { background: none; border: 0; cursor: pointer; }
     width: 40px; height: 40px; border-radius: 50%;
     background: var(--tile); color: var(--dim); font-size: 15px;
   }
-  .link-client { display: none; }
   .grid-wrap { padding-bottom: 84px; }
   .grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
 }
 
 @media (max-width: 560px) {
-  .mult button { min-width: 40px; }
+  .t-szs { grid-template-columns: 1fr; }   /* plus la place côte à côte */
   .search input { font-size: 16px; }   /* < 16px : iOS zoome au focus */
 }
 
