@@ -25,13 +25,6 @@ function priceOf(id, size) {
   return (it.sizes.find(s => s.label === size) || it.sizes[0]).price;
 }
 
-/* Prix des tuiles : deux décimales au lieu de trois. Tous les tarifs de
-   la carte se terminent par un zéro (x.000 ou x.500), on ne perd donc
-   aucune information, et on gagne la largeur qui manquait au compteur.
-   Le panneau de commande, le total et le bon gardent les trois décimales
-   du dinar. */
-const fmtT = m => (m / 1000).toFixed(2);
-
 /* recherche insensible aux accents et à la casse */
 const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 const HAY = new Map(ITEMS.map(i => [i.id, norm(`${i.name} ${(catById.get(i.cat) || {}).label || ''} ${i.desc || ''}`)]));
@@ -138,7 +131,7 @@ function tileHTML(it) {
         return `
         <div class="sz${q ? ' on' : ''}">
           ${p.label ? `<span class="sz-lab">${p.label}</span>` : ''}
-          <span class="sz-price">${fmtT(p.price)}</span>
+          <span class="sz-price">${fmt(p.price)}</span>
           <div class="stepper xs">
             <button data-q="dec" data-key="${p.k}" ${q ? '' : 'disabled'}
                     aria-label="Retirer ${nom}">−</button>
