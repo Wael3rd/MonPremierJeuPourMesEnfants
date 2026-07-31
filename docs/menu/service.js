@@ -72,12 +72,6 @@ const totalOf = t => Object.entries(order(t).lignes)
 const countOf = t => Object.values(order(t).lignes).reduce((a, b) => a + b, 0);
 
 /* ------------------------------ actions ---------------------------- */
-function add(id, size, n = 1) {
-  const k = key(id, size);
-  const L = lignes();
-  L[k] = (L[k] || 0) + n;
-  save(); paint();
-}
 function setQty(k, q) {
   const L = lignes();
   if (q <= 0) delete L[k]; else L[k] = Math.min(q, 99);
@@ -110,49 +104,44 @@ function visibleItems() {
 const RANG = { M: 0, L: 1 };
 const parTaille = (a, b) => (RANG[a.label] ?? 9) - (RANG[b.label] ?? 9);
 
+/* Une ligne de prix par tarif : les articles à taille unique en ont une,
+   les pizzas en ont deux. Même mise en page pour tout le monde, et le
+   compteur est le seul élément actif — la tuile n'ajoute rien, on peut
+   donc corriger une quantité sans risque d'ajout involontaire. */
+function lignesPrix(it) {
+  return it.sizes
+    ? [...it.sizes].sort(parTaille).map(sz => ({ label: sz.label, price: sz.price, k: key(it.id, sz.label) }))
+    : [{ label: '', price: it.price, k: it.id }];
+}
+
 function tileHTML(it) {
   const L = lignes();
   const cat = (catById.get(it.cat) || {}).label || '';
+  const prix = lignesPrix(it);
+  const total = prix.reduce((s, p) => s + (L[p.k] || 0), 0);
 
-  /* Article à plusieurs tailles : chaque taille est une ligne autonome,
-     avec son prix et son compteur. La tuile n'est pas cliquable — seuls
-     les − et + agissent, pour qu'on puisse corriger sans risque. */
-  if (it.sizes) {
-    const total = it.sizes.reduce((s, sz) => s + (L[key(it.id, sz.label)] || 0), 0);
-    return `
-    <div class="tile tile-sz${total ? ' on' : ''}" data-tile="${it.id}">
-      <div class="t-name">${it.name}</div>
-      <div class="t-cat">${cat}</div>
-      <div class="t-szs">
-        ${[...it.sizes].sort(parTaille).map(sz => {
-          const k = key(it.id, sz.label);
-          const q = L[k] || 0;
-          return `
-          <div class="sz${q ? ' on' : ''}">
-            <span class="sz-lab">${sz.label}</span>
-            <span class="sz-price">${fmt(sz.price)}</span>
-            <div class="stepper xs">
-              <button data-q="dec" data-key="${k}" ${q ? '' : 'disabled'}
-                      aria-label="Retirer ${it.name} ${sz.label}">−</button>
-              <span class="n">${q}</span>
-              <button data-q="inc" data-key="${k}"
-                      aria-label="Ajouter ${it.name} ${sz.label}">+</button>
-            </div>
-          </div>`;
-        }).join('')}
-      </div>
-    </div>`;
-  }
-  const q = L[it.id] || 0;
   return `
-  <button class="tile${q ? ' on' : ''}" data-tile="${it.id}" data-add="${it.id}">
-    <div>
-      <div class="t-name">${it.name}</div>
-      <div class="t-cat">${cat}</div>
+  <div class="tile${prix.length > 1 ? ' tile-sz' : ''}${total ? ' on' : ''}" data-tile="${it.id}">
+    <div class="t-name">${it.name}</div>
+    <div class="t-cat">${cat}</div>
+    <div class="t-szs">
+      ${prix.map(p => {
+        const q = L[p.k] || 0;
+        const nom = `${it.name}${p.label ? ' ' + p.label : ''}`;
+        return `
+        <div class="sz${q ? ' on' : ''}">
+          ${p.label ? `<span class="sz-lab">${p.label}</span>` : ''}
+          <span class="sz-price">${fmt(p.price)}</span>
+          <div class="stepper xs">
+            <button data-q="dec" data-key="${p.k}" ${q ? '' : 'disabled'}
+                    aria-label="Retirer ${nom}">−</button>
+            <span class="n">${q}</span>
+            <button data-q="inc" data-key="${p.k}" aria-label="Ajouter ${nom}">+</button>
+          </div>
+        </div>`;
+      }).join('')}
     </div>
-    <div class="t-price">${fmt(it.price)}</div>
-    ${q ? `<span class="t-qty">${q}</span>` : ''}
-  </button>`;
+  </div>`;
 }
 
 function paintGrid() {
@@ -221,14 +210,9 @@ function paint() { paintGrid(); paintOrder(); }
 /* =========================== interactions ========================== */
 $('#grid').addEventListener('click', e => {
   const step = e.target.closest('[data-q]');
-  if (step) {                       // compteur d'une taille
-    const k = step.dataset.key, cur = lignes()[k] || 0;
-    setQty(k, step.dataset.q === 'inc' ? cur + 1 : cur - 1);
-    return;
-  }
-  const b = e.target.closest('[data-add]');
-  if (!b) return;
-  add(b.dataset.add, b.dataset.size || null);
+  if (!step) return;                // seuls les compteurs agissent
+  const k = step.dataset.key, cur = lignes()[k] || 0;
+  setQty(k, step.dataset.q === 'inc' ? cur + 1 : cur - 1);
 });
 
 $('#lines').addEventListener('click', e => {
@@ -336,7 +320,8 @@ addEventListener('keydown', e => {
   if (e.key === 'Enter' && document.activeElement === qInput) {
     const first = visibleItems()[0];
     if (first) {
-      add(first.id, first.sizes ? first.sizes[0].label : null);
+      const p = lignesPrix(first)[0];      // la ligne la plus à gauche
+      setQty(p.k, (lignes()[p.k] || 0) + 1);
       state.q = ''; qInput.value = ''; $('#qClear').hidden = true; paintGrid();
     }
     e.preventDefault();

@@ -133,7 +133,9 @@ button { background: none; border: 0; cursor: pointer; }
 .list { display: block; }
 .grid {
   display: grid; gap: 8px;
-  grid-template-columns: repeat(auto-fill, minmax(158px, 1fr));
+  /* une ligne « prix + compteur » réclame ~165 px : en dessous, le
+     compteur passerait à la ligne et les tuiles seraient inégales */
+  grid-template-columns: repeat(auto-fill, minmax(178px, 1fr));
   align-content: start;
 }
 
@@ -198,15 +200,13 @@ button { background: none; border: 0; cursor: pointer; }
 .empty { color: var(--dim); text-align: center; padding: 50px 10px; font-size: 17px; }
 
 .tile {
-  position: relative; text-align: left;
+  position: relative; text-align: left; cursor: default;
   background: var(--tile); border: 1px solid var(--line);
-  border-radius: var(--r); padding: 11px 12px;
-  min-height: 76px;
-  display: flex; flex-direction: column; gap: 6px; justify-content: space-between;
-  transition: background .12s, transform .08s, border-color .12s;
+  border-radius: var(--r); padding: 10px 10px 10px 12px;
+  display: flex; flex-direction: column; gap: 7px; justify-content: space-between;
+  transition: background .12s, border-color .12s;
 }
-.tile:hover { background: var(--tile-2); border-color: var(--line-2); }
-.tile:active { transform: scale(.975); }
+.tile:hover { border-color: var(--line-2); }
 .tile.on { border-color: var(--accent); background: #1a2434; }
 
 .t-name {
@@ -221,10 +221,11 @@ button { background: none; border: 0; cursor: pointer; }
 /* Deux tailles = deux lignes autonomes, médium à gauche, large à droite.
    La tuile occupe deux colonnes de la grille : il faut la place pour deux
    prix et deux compteurs côte à côte. */
-.tile-sz { grid-column: span 2; cursor: default; }
-.tile-sz:active { transform: none; }
+/* deux tarifs = deux colonnes, donc une tuile deux fois plus large */
+.tile-sz { grid-column: span 2; }
 
-.t-szs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.t-szs { display: grid; grid-template-columns: 1fr; gap: 6px; }
+.tile-sz .t-szs { grid-template-columns: 1fr 1fr; }
 .sz {
   display: flex; align-items: center; gap: 6px;
   padding: 5px 6px 5px 8px; border-radius: 9px;
@@ -427,7 +428,7 @@ button { background: none; border: 0; cursor: pointer; }
 }
 
 @media (max-width: 560px) {
-  .t-szs { grid-template-columns: 1fr; }   /* plus la place côte à côte */
+  .tile-sz .t-szs { grid-template-columns: 1fr; }   /* plus la place côte à côte */
   .search input { font-size: 16px; }   /* < 16px : iOS zoome au focus */
 }
 
